@@ -1,0 +1,31 @@
+10个用户，每个请求间隔1秒
+   dur         receiveBufSize
+484999us          9items
+582873us          8items
+481651us          17items
+518486us          25items
+503990us          25items
+597753us          33items
+483855us          33items
+480049us          41items
+550175us          41items
+479541us          49items
+500627us          49items
+488006us          57items
+644002us          57items
+487995us          66items
+500027us          65items
+592324us          74items
+491643us          73items
+554769us          82items
+482745us          81items
+611015us          90items
+482339us          80items
+482819us          71items
+528716us          62items
+481162us          53items
+549730us          44items
+487423us          35items
+481580us          26items
+482748us          17items
+481846us          8items
