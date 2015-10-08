@@ -2,7 +2,7 @@
 #include <Locate.h>
 #include <define.h>
 #include <Location.h>
-#include <DBAnaysisData.h>
+#include <Database.h>
 
 #include <sys/time.h>
 #include <stdio.h>
@@ -17,7 +17,7 @@ using Json::Reader;
 
 Location::Location(MsgQueue *msgQueue):msgQueue(msgQueue)
 {
-	// getData();
+	getData();
 	pthread_t p;
 	if(pthread_create(&p, NULL, run, this) == -1)
 	{
@@ -40,10 +40,12 @@ Location::~Location()
 void Location::getData(void)	//把数据库里的指纹数据加载到dbfingers 和 points里
 {
 	int apid=1;
-    for(apid=1; apid<8 ; apid++) {
+    for(apid=1; apid<4 ; apid++) {
         vector<Locate> v;
         vector<string> vs;
-        // v = DBAnaysisData::Location2Handle(apid);
+        if(Database::LocationHandleData(apid,v) == 1541)
+        	debug("get data error");
+        	
         Locate l = v[0];
         Point tmp(apid, l.getPositionx(), l.getPositiony());
         points.push_back(tmp);
@@ -65,24 +67,23 @@ void* Location::run(void *arg)
     FastWriter writer;
    	while (true)
    	{
+   		//获取待定位数据
         if((thislo->msgQueue)->startLoc(id,rssi) == -1)
             continue;
-
-        // Point ret = thislo->Location1(rssi, thislo->points, thislo->dbfingers);
         
-        // object["typecode"] = 1540;
-        // // object["x"] = ret.xposition;
-        // // object["y"] = ret.yposition;
-        // object["z"] = 2;
-        // // object["timestamp"]=value["timestamp"];
-        // string strdata = writer.write(object);
-        (thislo->msgQueue)->finishLoc(id,make_tuple(2,2,2));
+        //定位
+        debug("start to locate");
+        Point ret = thislo->Location1(rssi, thislo->points, thislo->dbfingers);
         
-#if 	TEST
-        // cout<<"in locatefun,after locate,send strdata: "<<strdata<<endl;
+        //定位结果
+        debug("after locate");
+        (thislo->msgQueue)->finishLoc(id,make_tuple(ret.xposition,ret.yposition,2));
+        
+        //测试定位时间
+		#if TEST
    		if(thislo->test()==-1)
    			cout<<"error in run"<<endl;
-#endif
+		#endif
     }
 }
 

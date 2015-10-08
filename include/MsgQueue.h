@@ -8,6 +8,9 @@
 #include <queue>
 #include <utility>
 #include <string>
+#include <map>
+
+class TcpUser;
 
 using std::string;
 
@@ -18,8 +21,10 @@ public:
 
 	~MsgQueue(){};
 
-	/*把导引请求加入到待定位队列,Json::Value格式：{”rssi”:”rssi”}*/
-	void addLocItem(int id,const Json::Value &value);
+	/*把导引请求加入到待定位队列,Json::Value格式：{”rssi”:”rssi”}
+	检查该用户是否在MsgQueue的users当中。如果不在则加入。
+	*/
+	void addLocItem(int id,TcpUser* ptcpuser,const Json::Value &value);
 
 	/*
 	描述：开始定位，被定位线程调用来获取定位请求。但并不删除该定位请求。
@@ -39,8 +44,9 @@ public:
 	/*
 	把导引请求加入到待导引队列
 	Json::Value格式： {”sour”:{“x”:1.1,”y”:1.1},”dest”:{“x”:1.1,”y”:1.1}}
+	检查该用户是否在MsgQueue的users当中。如果不在则加入。
 	*/
-	void addGuideItem(int id,const Json::Value &value);
+	void addGuideItem(int id,TcpUser* ptcpuser,const Json::Value &value);
 
 	/*
 	描述：开始导引，被导引线程调用来获取导引请求。但不删除该请求。
@@ -60,6 +66,13 @@ public:
 	*/
 	void finishGuide(int id, const std::vector<std::pair<int,int> >& path);
 	
+	/**
+	 * 描述：返回id好的对应的定位和导引结果，并转换成字符串	
+	 * @param  strdata 引用参数，返回信息
+	 * @return         成功返回ture，失败返回fal
+	 */
+	bool getMsg(int id,string &strdata);
+
 	/*
 	描述：清除ID为id的用户的定位、导引请求和结果，
 	参数:用户的ID。
@@ -99,6 +112,9 @@ private:
 	//导引结果，LocateVec[0]为ID为0的用户的结果队列。
 	//Json::Value格式： {z:2, path:[{“x”:20.1,”y”:40.1}, {“x”:26.1,”y”:42.1}…]}
 	std::vector<std::queue<Json::Value> > GuidedVec;
+
+	//用来存放用户对象指针与用户id对。
+	std::map<int,TcpUser*> users;
 };
 
 #endif

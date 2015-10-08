@@ -136,7 +136,7 @@ TcpServer-Guide.o: Guide.cpp /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/posix_opt.h \
  /usr/include/i386-linux-gnu/bits/environments.h \
  /usr/include/i386-linux-gnu/bits/confname.h /usr/include/getopt.h \
- ../include/define.h
+ ../include/define.h /usr/include/i386-linux-gnu/sys/time.h
 
 /usr/include/stdc-predef.h:
 
@@ -511,3 +511,5 @@ TcpServer-Guide.o: Guide.cpp /usr/include/stdc-predef.h \
 /usr/include/getopt.h:
 
 ../include/define.h:
+
+/usr/include/i386-linux-gnu/sys/time.h:

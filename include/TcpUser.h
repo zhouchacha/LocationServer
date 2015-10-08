@@ -5,6 +5,7 @@
 #include <event.h>
 #include <string.h>
 #include <MsgQueue.h>
+#include <queue>
 
 #include <string>
 using std::string;
@@ -53,7 +54,12 @@ public:
 	 */
 	void DataHandle(string &data);
 
-	
+	/**
+	 * 描述：如果写事件没有绑定则绑定。
+	 */
+	void PendingWriteEvt();
+
+
 	/**
 	 * 从套接字接收数据，进行预处理。目前数据传输协议采用：长度+数据 的形式。
 	 * 在该函数里要进行分离长度与数据并判断接收是否成功。
@@ -111,6 +117,7 @@ private:
 	MsgQueue &msgQueue;		//请求队列
 	TcpServer *tcpServer;		
 
+	std::queue<Json::Value> sendMsg;
 
 	/**
 	 * 保证动态分配的数组能正常释放,在构造函数里根据出入参数的长度分配

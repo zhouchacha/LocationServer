@@ -1,17 +1,10 @@
-
-// #include <utility>
-// #include <iostream>
-// #include <sys/socket.h>
-// #include <arpa/inet.h>
-// #include <memory.h>
-// #include <time.h>	//for test time spent in each part
-// #include <fstream>
 #include <json/json.h>
 #include <vector>
 
 #include <TcpUser.h>
 #include <define.h>
 #include <TcpServer.h>
+#include <Database.h>
 
 const int REGISTERTEL = 0;//
 const int REGISTERNAME = 1;//用户注册
@@ -53,12 +46,11 @@ int TcpUser::Init()
 	}
 	event_add(readEvt, NULL);
 
-	if ((writeEvt = event_new(tcpServer->base, sock_fd, EV_WRITE, OnWrite, this)) == NULL) 
-	{
-		debug("create write event error");
-		return -1;
-	}
-
+    if ((writeEvt = event_new(tcpServer->base, sock_fd, EV_WRITE, OnWrite, this)) == NULL) 
+    {
+        debug("create write event error");
+        return -1;
+    }
 	return 0;
 }
 
@@ -66,7 +58,7 @@ int TcpUser::Init()
 void TcpUser::DataHandle(string &data)
 {
     debug("handle data");
-    debug("handle data %s",data.c_str());
+    // debug("handle data %s",data.c_str());
     Json::Reader reader;
     Json::Value value;
     int typecode;
@@ -88,7 +80,11 @@ void TcpUser::DataHandle(string &data)
             string usertel = value["usertel"].asString();//content中默认只有用户名，
             string username = value["username"].asString();
             string password = value["password"].asString();
-            // RegisterHandle(username, username, password);   //传用户名到电话号码参数
+            int ret = Database::RegisterHandle(usertel, username, password);   //传用户名到电话号码参数
+            Json::Value jRet;
+            jRet["typecode"] = ret;
+            sendMsg.push(jRet);
+            PendingWriteEvt();
             break;
         }
 
@@ -98,7 +94,11 @@ void TcpUser::DataHandle(string &data)
             string username = value["username"].asString();
             string password = value["password"].asString();
             this->username = username;
-            // NameLoginHandle(username, password);
+            int ret = Database::NameLoginHandle(username, password);
+            Json::Value jRet;
+            jRet["typecode"] = ret;
+            sendMsg.push(jRet);
+            PendingWriteEvt();
             break;
         }
 
@@ -107,7 +107,11 @@ void TcpUser::DataHandle(string &data)
             debug("DB receive tellogin data");
             string usertel = value["usertel"].asString();
             string password = value["password"].asString();
-            // TelLoginHandle(usertel, password);
+            int ret = Database::TelLoginHandle(usertel, password);
+            Json::Value jRet;
+            jRet["typecode"] = ret;
+            sendMsg.push(jRet);
+            PendingWriteEvt();
             break;
         }
 
@@ -115,7 +119,11 @@ void TcpUser::DataHandle(string &data)
         case TELNOTLOGIN: {
             debug("DB receive telnotlogin data");
             string usertel = value["usertel"].asString();
-            // TelNotLoginHandle(usertel);
+            int ret = Database::TelNotLoginHandle(usertel);
+            Json::Value jRet;
+            jRet["typecode"] = ret;
+            sendMsg.push(jRet);
+            PendingWriteEvt();
             break;
         }
 
@@ -123,7 +131,11 @@ void TcpUser::DataHandle(string &data)
         case NAMELOGOUT: {
             debug("DB receive userlogout data");
             string username = value["username"].asString();
-            // NameLogoutHandle(username);
+            int ret = Database::NameLogoutHandle(username);
+            Json::Value jRet;
+            jRet["typecode"] = ret;
+            sendMsg.push(jRet);
+            PendingWriteEvt();
             break;
         }
 
@@ -131,7 +143,11 @@ void TcpUser::DataHandle(string &data)
         case TELLOGOUT: {
             debug("DB receive userlogout data");
             string usertel = value["usertel"].asString();
-            // TelLogoutHandle(usertel);
+            int ret = Database::TelLogoutHandle(usertel);
+            Json::Value jRet;
+            jRet["typecode"] = ret;
+            sendMsg.push(jRet);
+            PendingWriteEvt();
             break;
         }
 
@@ -139,8 +155,8 @@ void TcpUser::DataHandle(string &data)
         case LOCATION: {
             debug("DB receive location data");
             Json::Value rssi;
-            rssi["rssi"] = value["rssi"];
-            msgQueue.addLocItem(id,rssi);
+            rssi["rssi"] = value["RSSI"];
+            msgQueue.addLocItem(id,this,rssi);
             break;
         }
 
@@ -150,19 +166,19 @@ void TcpUser::DataHandle(string &data)
 	        Json::Value sd;
 	        sd["sour"] = value["sour"];
 	        sd["dest"] = value["dest"];
-	        msgQueue.addGuideItem(id,sd);
+	        msgQueue.addGuideItem(id,this,sd);
         	break;
         }
 
         // // 读路径信息
         // case ROADRECORD:{
         //     debug("DB recive road record");
-        //     Value object,array,item,path,pathitem;
+        //     Json::Value object,array,item,path,pathitem;
         //     int nums = 0;
         //     for(int i=value["start_item"].asInt();i<=value["end_item"].asInt();i++)
         //     {
-        //         vector<string> strVct;
-        //         vector<vector<string> > roadPath;
+        //         std::vector<string> strVct;
+        //         std::vector<vector<string> > roadPath;
         //         if(GetHistory(ptcpUser->username,i,strVct,roadPath) == -1)
         //         {
         //             debug("get history errror");
@@ -192,7 +208,7 @@ void TcpUser::DataHandle(string &data)
         //     object["typecode"] = 1560;
         //     object["history_items"] = array;
         //     object["nums"] = nums;
-        //     FastWriter writer;
+        //     Json::FastWriter writer;
         //     string data = writer.write(object);
         //     // ptcpUser->SendMsg(data);
         //     break;
@@ -202,7 +218,7 @@ void TcpUser::DataHandle(string &data)
         // case DELETEONERECORD:
         // case DELETERECORD:{
         //     debug("DB recive delete record");
-        //     Value object;
+        //     Json::Value object;
         //     if(typecode == DELETERECORD)
         //     {
         //         if(deleteAllHistory(ptcpUser->username) == -1)
@@ -213,7 +229,7 @@ void TcpUser::DataHandle(string &data)
         //     }
         //     else
         //     {
-        //         vector<string> strVct;
+        //         std::vector<string> strVct;
         //         strVct.push_back(value["data"].asString());
         //         strVct.push_back(value["starttime"].asString());
         //         strVct.push_back(value["endTime"].asString());
@@ -224,7 +240,7 @@ void TcpUser::DataHandle(string &data)
         //         }
         //         object["typecode"] = 1575;
         //     }
-        //     FastWriter writer;
+        //     Json::FastWriter writer;
         //     string data = writer.write(object);
         //     ptcpUser->SendMsg(data);
         //     break;
@@ -253,7 +269,12 @@ int TcpUser::GetId(void) const
 	return id;
 }
 
-
+void TcpUser::PendingWriteEvt()
+{
+    int pending = event_pending(writeEvt,EV_WRITE,NULL);
+    if(pending != EV_WRITE)
+        event_add(writeEvt,NULL);
+}
 
 int TcpUser::MyRead(string &str) const
 {
@@ -282,7 +303,7 @@ void TcpUser::OnRead(int sock, short what, void *arg)
 	TcpUser* ptcpUser = (TcpUser*)arg;
 	if( 0 == ptcpUser->MyRead(data) )
 		ptcpUser->DataHandle(data);
-	
+
 	else
 	{
 		if(ptcpUser->username != "") //下线
@@ -306,7 +327,6 @@ int TcpUser::MyWrite(const string &str) const
 	// if(send(sock_fd,data,len+2,0) != len+2)	//加长度首部
 	if(send(sock_fd,str.c_str(),str.size(),0) != str.size())
 	{
-		// debug("length:%d, send length:%d",str.length(),)
 		debug("error occur in sending data");
 	}
 	debug("sended data:%s,",str.c_str());
@@ -316,15 +336,21 @@ int TcpUser::MyWrite(const string &str) const
 void TcpUser::OnWrite(int sock, short what, void *arg) 
 {	
 	TcpUser *ptcpUser = (TcpUser*) arg;
-	string strdata;
-	// int size = ptcpUser->GetMsg(strdata);
-	int size=1;
-	
-	ptcpUser->MyWrite(strdata);
-
-	//只要sendMsgVec不为空，则循环触发writeEvt事件进行OnWrite发送
-	if (size)
-		event_add(ptcpUser->writeEvt, NULL);
+    string strdata;
+    if((ptcpUser->sendMsg).size() != 0)
+    {
+        Json::Value jMsg = (ptcpUser->sendMsg).front();
+        Json::FastWriter writer;
+    	strdata = writer.write(jMsg);
+        (ptcpUser->sendMsg).pop();
+        ptcpUser->MyWrite(strdata);
+    }
+    else
+    {
+        bool ret = (ptcpUser->msgQueue).getMsg(ptcpUser->id,strdata);
+        if(ret)
+            ptcpUser->MyWrite(strdata);
+    }
 }
 
 TcpUser::~TcpUser() 

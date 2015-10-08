@@ -304,11 +304,10 @@ void *Guide::guide(void *arg)
 	list<starnode*> listNode;
 	std::pair<int,int> sour,dest;
 	int id;
-	while (true){    
+	while (true){
+		//获取数据    
 		if((guide->msgQueue)->startGuide(id,sour,dest) == -1)	//no guide request
 			continue;
-		// guide->startPoint_index = guide->getIndexStart(get<0>(sour),get<1>(sour));
-		// guide->endPoint_index = guide->getIndexStart(get<0>(dest),get<1>(dest));
 		guide->startPoint_index = guide->getIndexStart(sour.first,sour.second);
 		guide->endPoint_index = guide->getIndexStart(dest.first,dest.second);
       
@@ -317,7 +316,7 @@ void *Guide::guide(void *arg)
         guide->parent.clear();
         listNode = guide->searchpath(guide->startPoint_index,guide->endPoint_index);
 
-	   //输出路径
+	   //输出结果
 		std::vector<std::pair<int,int> > path;
         for (auto it=listNode.begin(); it!=listNode.end(); ++it) 
         {
@@ -325,7 +324,9 @@ void *Guide::guide(void *arg)
 			cout<<(*it)->positionx<<" "<<(*it)->positiony<<"->"<<endl;	
         }
 		(guide->msgQueue)->finishGuide(id,path);
+        debug("finish one Guide");
 
+        //测试导引时间
 		#if TEST
    		if(guide->test()==-1)
    			cout<<"error in run"<<endl;

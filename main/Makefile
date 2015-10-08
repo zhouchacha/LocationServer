@@ -92,9 +92,10 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_TcpServer_OBJECTS = TcpServer-main.$(OBJEXT) \
 	TcpServer-TcpServer.$(OBJEXT) TcpServer-TcpUser.$(OBJEXT) \
-	TcpServer-DBConnpool.$(OBJEXT) TcpServer-Guide.$(OBJEXT) \
-	TcpServer-Point.$(OBJEXT) TcpServer-Util.$(OBJEXT) \
-	TcpServer-Location.$(OBJEXT) TcpServer-MsgQueue.$(OBJEXT)
+	TcpServer-ConnPool.$(OBJEXT) TcpServer-Database.$(OBJEXT) \
+	TcpServer-Guide.$(OBJEXT) TcpServer-Point.$(OBJEXT) \
+	TcpServer-Util.$(OBJEXT) TcpServer-Location.$(OBJEXT) \
+	TcpServer-MsgQueue.$(OBJEXT)
 TcpServer_OBJECTS = $(am_TcpServer_OBJECTS)
 TcpServer_DEPENDENCIES =
 TcpServer_LINK = $(CXXLD) $(TcpServer_CXXFLAGS) $(CXXFLAGS) \
@@ -159,12 +160,12 @@ am__define_uniq_tagged_files = \
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /home/finder1/server/Server0717/missing aclocal-1.14
+ACLOCAL = ${SHELL} /home/finder1/server/LocationServer/missing aclocal-1.14
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = ${SHELL} /home/finder1/server/Server0717/missing autoconf
-AUTOHEADER = ${SHELL} /home/finder1/server/Server0717/missing autoheader
-AUTOMAKE = ${SHELL} /home/finder1/server/Server0717/missing automake-1.14
+AUTOCONF = ${SHELL} /home/finder1/server/LocationServer/missing autoconf
+AUTOHEADER = ${SHELL} /home/finder1/server/LocationServer/missing autoheader
+AUTOMAKE = ${SHELL} /home/finder1/server/LocationServer/missing automake-1.14
 AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -192,7 +193,7 @@ LDFLAGS =
 LIBOBJS = 
 LIBS = 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/finder1/server/Server0717/missing makeinfo
+MAKEINFO = ${SHELL} /home/finder1/server/LocationServer/missing makeinfo
 MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = server
@@ -208,10 +209,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = 
 VERSION = 1.0
-abs_builddir = /home/finder1/server/Server0717/main
-abs_srcdir = /home/finder1/server/Server0717/main
-abs_top_builddir = /home/finder1/server/Server0717
-abs_top_srcdir = /home/finder1/server/Server0717
+abs_builddir = /home/finder1/server/LocationServer/main
+abs_srcdir = /home/finder1/server/LocationServer/main
+abs_top_builddir = /home/finder1/server/LocationServer
+abs_top_srcdir = /home/finder1/server/LocationServer
 ac_ct_CC = gcc
 ac_ct_CXX = g++
 am__include = include
@@ -231,7 +232,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/finder1/server/Server0717/install-sh
+install_sh = ${SHELL} /home/finder1/server/LocationServer/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -252,7 +253,7 @@ top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
 AUTOMAKE_OPTIONS = foreign
-TcpServer_SOURCES = main.cpp TcpServer.cpp TcpUser.cpp  DBConnpool.cpp Guide.cpp Point.cpp Util.cpp Location.cpp MsgQueue.cpp
+TcpServer_SOURCES = main.cpp TcpServer.cpp TcpUser.cpp  ConnPool.cpp Database.cpp Guide.cpp Point.cpp Util.cpp Location.cpp MsgQueue.cpp
 TcpServer_LDADD = -ljson -levent -lmysqlcppconn -lpthread
 TcpServer_CXXFLAGS = -I$(top_srcdir)/include
 all: all-am
@@ -342,7 +343,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-include ./$(DEPDIR)/TcpServer-DBConnpool.Po
+include ./$(DEPDIR)/TcpServer-ConnPool.Po
+include ./$(DEPDIR)/TcpServer-Database.Po
 include ./$(DEPDIR)/TcpServer-Guide.Po
 include ./$(DEPDIR)/TcpServer-Location.Po
 include ./$(DEPDIR)/TcpServer-MsgQueue.Po
@@ -408,19 +410,33 @@ TcpServer-TcpUser.obj: TcpUser.cpp
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -c -o TcpServer-TcpUser.obj `if test -f 'TcpUser.cpp'; then $(CYGPATH_W) 'TcpUser.cpp'; else $(CYGPATH_W) '$(srcdir)/TcpUser.cpp'; fi`
 
-TcpServer-DBConnpool.o: DBConnpool.cpp
-	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -MT TcpServer-DBConnpool.o -MD -MP -MF $(DEPDIR)/TcpServer-DBConnpool.Tpo -c -o TcpServer-DBConnpool.o `test -f 'DBConnpool.cpp' || echo '$(srcdir)/'`DBConnpool.cpp
-	$(AM_V_at)$(am__mv) $(DEPDIR)/TcpServer-DBConnpool.Tpo $(DEPDIR)/TcpServer-DBConnpool.Po
-#	$(AM_V_CXX)source='DBConnpool.cpp' object='TcpServer-DBConnpool.o' libtool=no \
+TcpServer-ConnPool.o: ConnPool.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -MT TcpServer-ConnPool.o -MD -MP -MF $(DEPDIR)/TcpServer-ConnPool.Tpo -c -o TcpServer-ConnPool.o `test -f 'ConnPool.cpp' || echo '$(srcdir)/'`ConnPool.cpp
+	$(AM_V_at)$(am__mv) $(DEPDIR)/TcpServer-ConnPool.Tpo $(DEPDIR)/TcpServer-ConnPool.Po
+#	$(AM_V_CXX)source='ConnPool.cpp' object='TcpServer-ConnPool.o' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -c -o TcpServer-DBConnpool.o `test -f 'DBConnpool.cpp' || echo '$(srcdir)/'`DBConnpool.cpp
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -c -o TcpServer-ConnPool.o `test -f 'ConnPool.cpp' || echo '$(srcdir)/'`ConnPool.cpp
 
-TcpServer-DBConnpool.obj: DBConnpool.cpp
-	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -MT TcpServer-DBConnpool.obj -MD -MP -MF $(DEPDIR)/TcpServer-DBConnpool.Tpo -c -o TcpServer-DBConnpool.obj `if test -f 'DBConnpool.cpp'; then $(CYGPATH_W) 'DBConnpool.cpp'; else $(CYGPATH_W) '$(srcdir)/DBConnpool.cpp'; fi`
-	$(AM_V_at)$(am__mv) $(DEPDIR)/TcpServer-DBConnpool.Tpo $(DEPDIR)/TcpServer-DBConnpool.Po
-#	$(AM_V_CXX)source='DBConnpool.cpp' object='TcpServer-DBConnpool.obj' libtool=no \
+TcpServer-ConnPool.obj: ConnPool.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -MT TcpServer-ConnPool.obj -MD -MP -MF $(DEPDIR)/TcpServer-ConnPool.Tpo -c -o TcpServer-ConnPool.obj `if test -f 'ConnPool.cpp'; then $(CYGPATH_W) 'ConnPool.cpp'; else $(CYGPATH_W) '$(srcdir)/ConnPool.cpp'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/TcpServer-ConnPool.Tpo $(DEPDIR)/TcpServer-ConnPool.Po
+#	$(AM_V_CXX)source='ConnPool.cpp' object='TcpServer-ConnPool.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -c -o TcpServer-DBConnpool.obj `if test -f 'DBConnpool.cpp'; then $(CYGPATH_W) 'DBConnpool.cpp'; else $(CYGPATH_W) '$(srcdir)/DBConnpool.cpp'; fi`
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -c -o TcpServer-ConnPool.obj `if test -f 'ConnPool.cpp'; then $(CYGPATH_W) 'ConnPool.cpp'; else $(CYGPATH_W) '$(srcdir)/ConnPool.cpp'; fi`
+
+TcpServer-Database.o: Database.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -MT TcpServer-Database.o -MD -MP -MF $(DEPDIR)/TcpServer-Database.Tpo -c -o TcpServer-Database.o `test -f 'Database.cpp' || echo '$(srcdir)/'`Database.cpp
+	$(AM_V_at)$(am__mv) $(DEPDIR)/TcpServer-Database.Tpo $(DEPDIR)/TcpServer-Database.Po
+#	$(AM_V_CXX)source='Database.cpp' object='TcpServer-Database.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -c -o TcpServer-Database.o `test -f 'Database.cpp' || echo '$(srcdir)/'`Database.cpp
+
+TcpServer-Database.obj: Database.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -MT TcpServer-Database.obj -MD -MP -MF $(DEPDIR)/TcpServer-Database.Tpo -c -o TcpServer-Database.obj `if test -f 'Database.cpp'; then $(CYGPATH_W) 'Database.cpp'; else $(CYGPATH_W) '$(srcdir)/Database.cpp'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/TcpServer-Database.Tpo $(DEPDIR)/TcpServer-Database.Po
+#	$(AM_V_CXX)source='Database.cpp' object='TcpServer-Database.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -c -o TcpServer-Database.obj `if test -f 'Database.cpp'; then $(CYGPATH_W) 'Database.cpp'; else $(CYGPATH_W) '$(srcdir)/Database.cpp'; fi`
 
 TcpServer-Guide.o: Guide.cpp
 	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -MT TcpServer-Guide.o -MD -MP -MF $(DEPDIR)/TcpServer-Guide.Tpo -c -o TcpServer-Guide.o `test -f 'Guide.cpp' || echo '$(srcdir)/'`Guide.cpp

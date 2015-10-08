@@ -119,34 +119,7 @@ TcpServer-MsgQueue.o: MsgQueue.cpp /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/ostream.tcc /usr/include/c++/4.8/istream \
  /usr/include/c++/4.8/bits/istream.tcc /usr/include/json/writer.h \
  /usr/include/c++/4.8/queue /usr/include/c++/4.8/bits/stl_heap.h \
- /usr/include/c++/4.8/bits/stl_queue.h ../include/define.h \
- ../include/DBAnaysisData.h ../include/TcpUser.h \
- /usr/local/include/event.h /usr/local/include/event2/event-config.h \
- /usr/include/i386-linux-gnu/sys/time.h /usr/local/include/evutil.h \
- /usr/local/include/event2/util.h /usr/include/netdb.h \
- /usr/include/netinet/in.h /usr/include/i386-linux-gnu/sys/socket.h \
- /usr/include/i386-linux-gnu/sys/uio.h \
- /usr/include/i386-linux-gnu/bits/uio.h \
- /usr/include/i386-linux-gnu/bits/socket.h \
- /usr/include/i386-linux-gnu/bits/socket_type.h \
- /usr/include/i386-linux-gnu/bits/sockaddr.h \
- /usr/include/i386-linux-gnu/asm/socket.h \
- /usr/include/asm-generic/socket.h \
- /usr/include/i386-linux-gnu/asm/sockios.h \
- /usr/include/asm-generic/sockios.h /usr/include/i386-linux-gnu/bits/in.h \
- /usr/include/rpc/netdb.h /usr/include/i386-linux-gnu/bits/siginfo.h \
- /usr/include/i386-linux-gnu/bits/netdb.h \
- /usr/local/include/event2/event_struct.h \
- /usr/local/include/event2/keyvalq_struct.h \
- /usr/local/include/event2/event.h \
- /usr/local/include/event2/event_compat.h \
- /usr/local/include/event2/buffer.h \
- /usr/local/include/event2/buffer_compat.h \
- /usr/local/include/event2/bufferevent.h \
- /usr/local/include/event2/bufferevent_struct.h \
- /usr/local/include/event2/bufferevent_compat.h \
- /usr/local/include/event2/tag.h /usr/local/include/event2/tag_compat.h \
- /usr/include/string.h ../include/Locate.h
+ /usr/include/c++/4.8/bits/stl_queue.h ../include/define.h
 
 /usr/include/stdc-predef.h:
 
@@ -473,75 +446,3 @@ TcpServer-MsgQueue.o: MsgQueue.cpp /usr/include/stdc-predef.h \
 /usr/include/c++/4.8/bits/stl_queue.h:
 
 ../include/define.h:
-
-../include/DBAnaysisData.h:
-
-../include/TcpUser.h:
-
-/usr/local/include/event.h:
-
-/usr/local/include/event2/event-config.h:
-
-/usr/include/i386-linux-gnu/sys/time.h:
-
-/usr/local/include/evutil.h:
-
-/usr/local/include/event2/util.h:
-
-/usr/include/netdb.h:
-
-/usr/include/netinet/in.h:
-
-/usr/include/i386-linux-gnu/sys/socket.h:
-
-/usr/include/i386-linux-gnu/sys/uio.h:
-
-/usr/include/i386-linux-gnu/bits/uio.h:
-
-/usr/include/i386-linux-gnu/bits/socket.h:
-
-/usr/include/i386-linux-gnu/bits/socket_type.h:
-
-/usr/include/i386-linux-gnu/bits/sockaddr.h:
-
-/usr/include/i386-linux-gnu/asm/socket.h:
-
-/usr/include/asm-generic/socket.h:
-
-/usr/include/i386-linux-gnu/asm/sockios.h:
-
-/usr/include/asm-generic/sockios.h:
-
-/usr/include/i386-linux-gnu/bits/in.h:
-
-/usr/include/rpc/netdb.h:
-
-/usr/include/i386-linux-gnu/bits/siginfo.h:
-
-/usr/include/i386-linux-gnu/bits/netdb.h:
-
-/usr/local/include/event2/event_struct.h:
-
-/usr/local/include/event2/keyvalq_struct.h:
-
-/usr/local/include/event2/event.h:
-
-/usr/local/include/event2/event_compat.h:
-
-/usr/local/include/event2/buffer.h:
-
-/usr/local/include/event2/buffer_compat.h:
-
-/usr/local/include/event2/bufferevent.h:
-
-/usr/local/include/event2/bufferevent_struct.h:
-
-/usr/local/include/event2/bufferevent_compat.h:
-
-/usr/local/include/event2/tag.h:
-
-/usr/local/include/event2/tag_compat.h:
-
-/usr/include/string.h:
-
-../include/Locate.h:

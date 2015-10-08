@@ -1,3 +1,6 @@
+/**
+ * 调用者有：Guide.cpp
+ */
 #ifndef _ASTAR_H_
 #define _ASTAR_H_
 
@@ -13,7 +16,7 @@
 using namespace std;
 
 #define INFI_MAX 65535
-#define T 20
+// #define T 20
 #define W0 0.2
 #define NODENUM 31
 #define EDGENUM 66

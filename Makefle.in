@@ -92,7 +92,7 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_TcpServer_OBJECTS = TcpServer-main.$(OBJEXT) \
 	TcpServer-TcpServer.$(OBJEXT) TcpServer-TcpUser.$(OBJEXT) \
-	TcpServer-ConnPool.$(OBJEXT) TcpServer-Database.$(OBJEXT) \
+	TcpServer-DBConnpool.$(OBJEXT) TcpServer-Database.$(OBJEXT) \
 	TcpServer-Guide.$(OBJEXT) TcpServer-Point.$(OBJEXT) \
 	TcpServer-Util.$(OBJEXT) TcpServer-Location.$(OBJEXT) \
 	TcpServer-MsgQueue.$(OBJEXT)
@@ -253,7 +253,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign
-TcpServer_SOURCES = main.cpp TcpServer.cpp TcpUser.cpp  ConnPool.cpp Database.cpp Guide.cpp Point.cpp Util.cpp Location.cpp MsgQueue.cpp
+TcpServer_SOURCES = main.cpp TcpServer.cpp TcpUser.cpp  DBConnpool.cpp Database.cpp Guide.cpp Point.cpp Util.cpp Location.cpp MsgQueue.cpp
 TcpServer_LDADD = -ljson -levent -lmysqlcppconn -lpthread
 TcpServer_CXXFLAGS = -I$(top_srcdir)/include
 all: all-am
@@ -343,7 +343,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TcpServer-ConnPool.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TcpServer-DBConnpool.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TcpServer-Database.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TcpServer-Guide.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TcpServer-Location.Po@am__quote@
@@ -410,19 +410,19 @@ TcpServer-TcpUser.obj: TcpUser.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -c -o TcpServer-TcpUser.obj `if test -f 'TcpUser.cpp'; then $(CYGPATH_W) 'TcpUser.cpp'; else $(CYGPATH_W) '$(srcdir)/TcpUser.cpp'; fi`
 
-TcpServer-ConnPool.o: ConnPool.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -MT TcpServer-ConnPool.o -MD -MP -MF $(DEPDIR)/TcpServer-ConnPool.Tpo -c -o TcpServer-ConnPool.o `test -f 'ConnPool.cpp' || echo '$(srcdir)/'`ConnPool.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/TcpServer-ConnPool.Tpo $(DEPDIR)/TcpServer-ConnPool.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ConnPool.cpp' object='TcpServer-ConnPool.o' libtool=no @AMDEPBACKSLASH@
+TcpServer-DBConnpool.o: DBConnpool.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -MT TcpServer-DBConnpool.o -MD -MP -MF $(DEPDIR)/TcpServer-DBConnpool.Tpo -c -o TcpServer-DBConnpool.o `test -f 'DBConnpool.cpp' || echo '$(srcdir)/'`DBConnpool.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/TcpServer-DBConnpool.Tpo $(DEPDIR)/TcpServer-DBConnpool.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DBConnpool.cpp' object='TcpServer-DBConnpool.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -c -o TcpServer-ConnPool.o `test -f 'ConnPool.cpp' || echo '$(srcdir)/'`ConnPool.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -c -o TcpServer-DBConnpool.o `test -f 'DBConnpool.cpp' || echo '$(srcdir)/'`DBConnpool.cpp
 
-TcpServer-ConnPool.obj: ConnPool.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -MT TcpServer-ConnPool.obj -MD -MP -MF $(DEPDIR)/TcpServer-ConnPool.Tpo -c -o TcpServer-ConnPool.obj `if test -f 'ConnPool.cpp'; then $(CYGPATH_W) 'ConnPool.cpp'; else $(CYGPATH_W) '$(srcdir)/ConnPool.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/TcpServer-ConnPool.Tpo $(DEPDIR)/TcpServer-ConnPool.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ConnPool.cpp' object='TcpServer-ConnPool.obj' libtool=no @AMDEPBACKSLASH@
+TcpServer-DBConnpool.obj: DBConnpool.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -MT TcpServer-DBConnpool.obj -MD -MP -MF $(DEPDIR)/TcpServer-DBConnpool.Tpo -c -o TcpServer-DBConnpool.obj `if test -f 'DBConnpool.cpp'; then $(CYGPATH_W) 'DBConnpool.cpp'; else $(CYGPATH_W) '$(srcdir)/DBConnpool.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/TcpServer-DBConnpool.Tpo $(DEPDIR)/TcpServer-DBConnpool.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DBConnpool.cpp' object='TcpServer-DBConnpool.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -c -o TcpServer-ConnPool.obj `if test -f 'ConnPool.cpp'; then $(CYGPATH_W) 'ConnPool.cpp'; else $(CYGPATH_W) '$(srcdir)/ConnPool.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -c -o TcpServer-DBConnpool.obj `if test -f 'DBConnpool.cpp'; then $(CYGPATH_W) 'DBConnpool.cpp'; else $(CYGPATH_W) '$(srcdir)/DBConnpool.cpp'; fi`
 
 TcpServer-Database.o: Database.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -MT TcpServer-Database.o -MD -MP -MF $(DEPDIR)/TcpServer-Database.Tpo -c -o TcpServer-Database.o `test -f 'Database.cpp' || echo '$(srcdir)/'`Database.cpp
