@@ -111,7 +111,7 @@ double Util::MapMatch(const map<string, double>& map1, const map<string, double>
 		}
 		iter++;
 	}
-	if (xfinger.size()>(m-8)){		//
+	if (xfinger.size()>(m-4)){		//
 	return Util::corr(xfinger,yfinger);
 	}
 	else return 0.0;
@@ -219,15 +219,15 @@ double Util::cov(const vector<double>& v1, const vector<double>& v2){
  }
  
 // 明氏距离 
- double Util::minkowsky(const vector<double>& v1, const vector<double>& v2, double m)
+ double Util::minkowsky(const vector<double>& v1, const vector<double>& v2, double n)
  {
      assert(v1.size() == v2.size());    
 	 double sum = 0.0;
      for (vector<double>::size_type i = 0; i != v1.size(); ++i)
      {
-        sum += pow(abs(v1[i] - v2[i]), m);
+        sum += pow(abs(v1[i] - v2[i]), n);
      }
-     return pow(sum, 1.0 / m);
+     return pow(sum, 1.0 / n);
  }
  
 // 欧式距离
@@ -245,7 +245,7 @@ double Util::cov(const vector<double>& v1, const vector<double>& v2){
 	 {
 		 sum += pow(abs(v1[i] -v2[i] ),2.0);
 	 }
-	 return  100 / pow(sum , 1.0 / 2.0);
+	 return  100 / pow(sum , 1.0 / 2.0)+ 0.001;
 	 
  }
 

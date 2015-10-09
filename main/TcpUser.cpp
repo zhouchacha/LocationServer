@@ -6,21 +6,24 @@
 #include <TcpServer.h>
 #include <Database.h>
 
-const int REGISTERTEL = 0;//
-const int REGISTERNAME = 1;//用户注册
-const int NAMELOGIN = 200;//用户使用username登录
-const int TELLOGIN = 201;//用户使用usertel登录
-const int TELNOTLOGIN = 202;//临时用户使用usertel登录
+const int REGISTER = 1;//用户注册
+const int NAMELOGIN = 10;//用户使用username登录
+const int TELLOGIN = 11;//用户使用usertel登录
+const int TELNOTLOGIN = 12;//临时用户使用usertel登录
+
 const int NAMELOGOUT = 210;//用户名用户登出操作
 const int TELLOGOUT = 211;//电话用户登出操作
+
 const int GUIDE = 1010; //导航
+const int LOCATION = 1040;//定位查询
+
 const int FLIGHTNUM = 1020; //乘车口查询
 const int TICKETINF = 1030; //票务信息查询
-const int LOCATION = 1040;//定位查询
-const int LOCATION2 = 1235;//定位查询2
+
 const int ROADRECORD = 1060;//路径历史记录查询
 const int DELETERECORD = 1070;//删除路径历史纪录
 const int DELETEONERECORD = 1075;//删除特定路径历史记录
+
 const int SERVERQUIT = 9999;    //服务器退出
 
 
@@ -74,13 +77,15 @@ void TcpUser::DataHandle(string &data)
             break;
 
         //用户注册
-        case REGISTERTEL:
-        case REGISTERNAME: {
+        case REGISTER: {
             debug("DB receive register data");
             string usertel = value["usertel"].asString();//content中默认只有用户名，
             string username = value["username"].asString();
             string password = value["password"].asString();
-            int ret = Database::RegisterHandle(usertel, username, password);   //传用户名到电话号码参数
+
+            int ret = Database::RegisterHandle(username, username, password);   //传用户名到电话号码参数
+
+            // int ret = Database::RegisterHandle(usertel, username, password);   //传用户名到电话号码参数
             Json::Value jRet;
             jRet["typecode"] = ret;
             sendMsg.push(jRet);
@@ -155,7 +160,7 @@ void TcpUser::DataHandle(string &data)
         case LOCATION: {
             debug("DB receive location data");
             Json::Value rssi;
-            rssi["rssi"] = value["RSSI"];
+            rssi["rssi"] = value["rssi"];
             msgQueue.addLocItem(id,this,rssi);
             break;
         }

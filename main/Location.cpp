@@ -67,17 +67,19 @@ void* Location::run(void *arg)
     FastWriter writer;
    	while (true)
    	{
+   		
    		//获取待定位数据
         if((thislo->msgQueue)->startLoc(id,rssi) == -1)
             continue;
-        
+       /* 
         //定位
         debug("start to locate");
         Point ret = thislo->Location1(rssi, thislo->points, thislo->dbfingers);
-        
+        */
         //定位结果
         debug("after locate");
-        (thislo->msgQueue)->finishLoc(id,make_tuple(ret.xposition,ret.yposition,2));
+        (thislo->msgQueue)->finishLoc(id,make_tuple(2,2,2));
+        // (thislo->msgQueue)->finishLoc(id,make_tuple(ret.xposition,ret.yposition,2));
         
         //测试定位时间
 		#if TEST

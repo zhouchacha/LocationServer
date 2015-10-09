@@ -47,7 +47,7 @@ public:
     //Dice 系数
 	static double dice(const vector<double>& v1, const vector<double>& v2);
 	//明氏距离
-	static double minkowsky(const vector<double>& v1, const vector<double>& v2, double m);
+	static double minkowsky(const vector<double>& v1, const vector<double>& v2, double n);
 	//欧式距离
 	static double euclidean(const vector<double>& v1, const vector<double>& v2);
 	static double euclidean1(const vector<double>& v1, const vector<double>& v2);

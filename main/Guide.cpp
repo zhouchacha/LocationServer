@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <define.h>
+#include <Database.h>
 
 #include <sys/time.h>
 #include <stdio.h>
@@ -254,7 +255,7 @@ list<starnode*> Guide::searchpath(int startpoint, int endpoint){  // ËÑË÷Â�
 
 void Guide::loadMap()
 {
-	ifstream fin("data.txt");
+	/*ifstream fin("data.txt");
 	string line;
 	getline(fin, line);
 	stringstream linebuf;
@@ -282,7 +283,8 @@ void Guide::loadMap()
 		cout << newnode[i].nodename << " (" << newnode[i].position_x << "," << newnode[i].position_y <<  ")" << endl;
 	    nodeMap.insert(pair<int, node>(newnode[i].m_index, newnode[i]));//ÏòÈÝÆ÷ÖÐ²åÈë½ÚµãÔªËØ
 	}
-	fin.close();
+	fin.close();*/
+	Database::GuideHandleData(nodeMap,edgeMap);
 }
 
 int Guide::getIndexStart(double point_x, double point_y) {   //
