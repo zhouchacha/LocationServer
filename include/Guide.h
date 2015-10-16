@@ -18,11 +18,11 @@ using namespace std;
 #define INFI_MAX 65535
 // #define T 20
 #define W0 0.2
-#define NODENUM 31
-#define EDGENUM 66
+#define NODENUM 107
+#define EDGENUM 328
 
-const int M = 100;
-const int N = 100;
+const int M = 120;
+const int N = 120;
 
 struct node{     // µØÍ¼½Úµã
 	string nodename;

@@ -28,12 +28,12 @@ const int SERVERQUIT = 9999;    //服务器退出
 
 
 TcpUser::TcpUser(int fd,TcpServer *tcpServer)
-				:sock_fd(fd),tcpServer(tcpServer),
-				msgQueue(tcpServer->msgQueue),username(""),
-				tel("")
+                :sock_fd(fd),tcpServer(tcpServer),
+                msgQueue(tcpServer->msgQueue),username(""),
+                tel("")
 {
-	id = onLineNum;
-	onLineNum++;
+    id = onLineNum;
+    onLineNum++;
     debug("create TcpUser success");
 }
 
@@ -42,26 +42,26 @@ int TcpUser::onLineNum = 0;
 
 int TcpUser::Init() 
 {
-	if ((readEvt = event_new(tcpServer->base, sock_fd, EV_READ | EV_PERSIST, OnRead, this))== NULL) 
-	{
-		debug("create read event error");
-		return -1;
-	}
-	event_add(readEvt, NULL);
+    if ((readEvt = event_new(tcpServer->base, sock_fd, EV_READ | EV_PERSIST, OnRead, this))== NULL) 
+    {
+        debug("create read event error");
+        return -1;
+    }
+    event_add(readEvt, NULL);
 
     if ((writeEvt = event_new(tcpServer->base, sock_fd, EV_WRITE, OnWrite, this)) == NULL) 
     {
         debug("create write event error");
         return -1;
     }
-	return 0;
+    return 0;
 }
 
 
 void TcpUser::DataHandle(string &data)
 {
     debug("handle data");
-    // debug("handle data %s",data.c_str());
+    debug("handle data %s",data.c_str());
     Json::Reader reader;
     Json::Value value;
     int typecode;
@@ -70,9 +70,9 @@ void TcpUser::DataHandle(string &data)
     
     switch(typecode) 
     {
-    	//关闭服务器
+        //关闭服务器
         case SERVERQUIT:
-        	debug("recive an quit request");
+            debug("recive an quit request");
             tcpServer->QuitServer();
             break;
 
@@ -161,98 +161,98 @@ void TcpUser::DataHandle(string &data)
             debug("DB receive location data");
             Json::Value rssi;
             rssi["rssi"] = value["rssi"];
-            msgQueue.addLocItem(id,this,rssi);
+            // msgQueue.addLocItem(id,this,rssi);
             break;
         }
 
         // 导引
         case GUIDE:{
-	        debug("DB receive guide data");
-	        Json::Value sd;
-	        sd["sour"] = value["sour"];
-	        sd["dest"] = value["dest"];
-	        msgQueue.addGuideItem(id,this,sd);
-        	break;
+            debug("DB receive guide data");
+            Json::Value sd;
+            sd["sour"] = value["sour"];
+            sd["dest"] = value["dest"];
+            msgQueue.addGuideItem(id,this,sd);
+            break;
         }
 
-        // // 读路径信息
-        // case ROADRECORD:{
-        //     debug("DB recive road record");
-        //     Json::Value object,array,item,path,pathitem;
-        //     int nums = 0;
-        //     for(int i=value["start_item"].asInt();i<=value["end_item"].asInt();i++)
-        //     {
-        //         std::vector<string> strVct;
-        //         std::vector<vector<string> > roadPath;
-        //         if(GetHistory(ptcpUser->username,i,strVct,roadPath) == -1)
-        //         {
-        //             debug("get history errror");
-        //             continue;
-        //         }
-        //         for(auto iter=roadPath.begin();iter!=roadPath.end();iter++)
-        //         {
-        //             stringstream ss;
-        //             ss<<(*iter)[0];
-        //             int x;
-        //             ss>>x;
-        //             pathitem["x"] = x;
-        //             ss<<(*iter)[1];
-        //             int y;
-        //             ss>>y;
-        //             pathitem["y"] = y;
-        //             pathitem["time"] = (*iter)[2];
-        //             path.append(pathitem);
-        //         }
-        //         item["path"] = path;
-        //         item["date"] = strVct[0];
-        //         item["starttime"] = strVct[1];
-        //         item["endtime"] = strVct[2];
-        //         array.append(item);  
-        //         nums++;              
-        //     }
-        //     object["typecode"] = 1560;
-        //     object["history_items"] = array;
-        //     object["nums"] = nums;
-        //     Json::FastWriter writer;
-        //     string data = writer.write(object);
-        //     // ptcpUser->SendMsg(data);
-        //     break;
-        // }
+        // 读路径信息
+        case ROADRECORD:{
+            debug("DB recive road record");
+            Json::Value object,array,item,path,pathitem;
+            int nums = 0;
+            for(int i=value["start_item"].asInt();i<=value["end_item"].asInt();i++)
+            {
+                std::vector<string> strVct;
+                std::vector<vector<string> > roadPath;
+                if(Database::GetHistory(username,i,strVct,roadPath) == 1561)
+                {
+                    debug("get history errror");
+                    continue;
+                }
+                for(auto iter=roadPath.begin();iter!=roadPath.end();iter++)
+                {
+                    stringstream ss;
+                    ss<<(*iter)[0];
+                    int x;
+                    ss>>x;
+                    pathitem["x"] = x;
+                    ss<<(*iter)[1];
+                    int y;
+                    ss>>y;
+                    pathitem["y"] = y;
+                    pathitem["time"] = (*iter)[2];
+                    path.append(pathitem);
+                }
+                item["path"] = path;
+                item["date"] = strVct[0];
+                item["starttime"] = strVct[1];
+                item["endtime"] = strVct[2];
+                array.append(item);  
+                nums++;              
+            }
+            object["typecode"] = 1560;
+            object["history_items"] = array;
+            object["nums"] = nums;
+            Json::FastWriter writer;
+            sendMsg.push(object);
+            PendingWriteEvt();
+            break;
+        }
 
-        // // 删除路径历史记录
-        // case DELETEONERECORD:
-        // case DELETERECORD:{
-        //     debug("DB recive delete record");
-        //     Json::Value object;
-        //     if(typecode == DELETERECORD)
-        //     {
-        //         if(deleteAllHistory(ptcpUser->username) == -1)
-        //         {
-        //             object["typecode"] = 1571;
-        //         }
-        //         object["typecode"] = 1570;
-        //     }
-        //     else
-        //     {
-        //         std::vector<string> strVct;
-        //         strVct.push_back(value["data"].asString());
-        //         strVct.push_back(value["starttime"].asString());
-        //         strVct.push_back(value["endTime"].asString());
-        //         if(deleteOneHistory(ptcpUser->username,strVct) == -1)
-        //         {
-        //             debug("delete one history error");
-        //             object["typecode"] = 1576;
-        //         }
-        //         object["typecode"] = 1575;
-        //     }
-        //     Json::FastWriter writer;
-        //     string data = writer.write(object);
-        //     ptcpUser->SendMsg(data);
-        //     break;
-        // }
+        // 删除路径历史记录
+        case DELETEONERECORD:
+        case DELETERECORD:{
+            debug("DB recive delete record");
+            Json::Value object;
+            if(typecode == DELETERECORD)
+            {
+                if(Database::deleteAllHistory(username) == -1)
+                {
+                    object["typecode"] = 1571;
+                }
+                object["typecode"] = 1570;
+            }
+            else
+            {
+                std::vector<string> strVct;
+                strVct.push_back(value["data"].asString());
+                strVct.push_back(value["starttime"].asString());
+                strVct.push_back(value["endTime"].asString());
+                if(Database::deleteOneHistory(username,strVct) == -1)
+                {
+                    debug("delete one history error");
+                    object["typecode"] = 1576;
+                }
+                object["typecode"] = 1575;
+            }
+            Json::FastWriter writer;
+            sendMsg.push(object);
+            PendingWriteEvt();
+            break;
+        }
 
         default:{
-            debug("illegal request: %s",data.c_str());
+            // debug("illegal request: %s",data.c_str());
            break;
         }
     }
@@ -261,17 +261,17 @@ void TcpUser::DataHandle(string &data)
 
 void TcpUser::SetUserName(string name)
 {
-	this->username = name;
+    this->username = name;
 }
 
 void TcpUser::SetUserTel(string tel)
 {
-	this->tel = tel;
+    this->tel = tel;
 }
 
 int TcpUser::GetId(void) const
 {
-	return id;
+    return id;
 }
 
 void TcpUser::PendingWriteEvt()
@@ -283,89 +283,95 @@ void TcpUser::PendingWriteEvt()
 
 int TcpUser::MyRead(string &str) const
 {
-	short int len;
-	if (recv(sock_fd, (char*) &len, 2, 0) >= 0) 
-	{
-		len = ntohs(len);
-		if(len>0&&len<1024000)
-		{
-			NewDataArray newDataArray(len+1);
-			char* data = newDataArray.GetArrayPtr();
-			if(recv(sock_fd,data,len,0) == len)
-			{
-				str = data;
-				return 0;
-			}
-		}
-	}
-	return -1;
+    short int len;
+    if (recv(sock_fd, (char*) &len, 2, 0) >= 0) 
+    {
+        len = ntohs(len);
+        if(len>0&&len<1024000)
+        {
+            NewDataArray newDataArray(len+1);
+            char* data = newDataArray.GetArrayPtr();
+            if(recv(sock_fd,data,len,0) == len)
+            {
+                str = data;
+                return 0;
+            }
+        }
+    }
+    return -1;
 }
 
 void TcpUser::OnRead(int sock, short what, void *arg) 
 {
-	debug("receive data");
-	string data;
-	TcpUser* ptcpUser = (TcpUser*)arg;
-	if( 0 == ptcpUser->MyRead(data) )
-		ptcpUser->DataHandle(data);
+    debug("receive data");
+    string data;
+    TcpUser* ptcpUser = (TcpUser*)arg;
+    if( 0 == ptcpUser->MyRead(data) )
+        ptcpUser->DataHandle(data);
 
-	else
-	{
-		if(ptcpUser->username != "") //下线
-			ptcpUser->DataHandle(ptcpUser->username);
+    else
+    {
+        if(ptcpUser->username != "") //下线
+            ptcpUser->DataHandle(ptcpUser->username);
 
-		(ptcpUser->msgQueue).clearRqst(ptcpUser->id);
-		(ptcpUser->tcpServer)->OffConnection(ptcpUser);
-	}
+        (ptcpUser->msgQueue).clearRqst(ptcpUser->id);
+        (ptcpUser->tcpServer)->OffConnection(ptcpUser);
+    }
 
 }
 
 
 int TcpUser::MyWrite(const string &str) const
 {
-	NewDataArray newDataArray(2+str.size()+1);
-	char* data = newDataArray.GetArrayPtr();
-	short int len = str.size();
-	memcpy(data,&len,2);
-	memcpy(data+2,str.c_str(),len);
+    NewDataArray newDataArray(2+str.size()+1);
+    char* data = newDataArray.GetArrayPtr();
+    short int len = str.size();
+    memcpy(data,&len,2);
+    memcpy(data+2,str.c_str(),len);
 
-	// if(send(sock_fd,data,len+2,0) != len+2)	//加长度首部
-	if(send(sock_fd,str.c_str(),str.size(),0) != str.size())
-	{
-		debug("error occur in sending data");
-	}
-	debug("sended data:%s,",str.c_str());
+    // if(send(sock_fd,data,len+2,0) != len+2)  //加长度首部
+    if(send(sock_fd,str.c_str(),str.size(),0) != str.size())
+    {
+        debug("error occur in sending data");
+    }
+    debug("sended data:%s,",str.c_str());
 }
 
 
 void TcpUser::OnWrite(int sock, short what, void *arg) 
-{	
-	TcpUser *ptcpUser = (TcpUser*) arg;
+{   
+    TcpUser *ptcpUser = (TcpUser*) arg;
+    Json::Value jMsg;
+    Json::FastWriter writer;
     string strdata;
     if((ptcpUser->sendMsg).size() != 0)
     {
-        Json::Value jMsg = (ptcpUser->sendMsg).front();
-        Json::FastWriter writer;
-    	strdata = writer.write(jMsg);
+        jMsg = (ptcpUser->sendMsg).front();
+        strdata = writer.write(jMsg);
         (ptcpUser->sendMsg).pop();
         ptcpUser->MyWrite(strdata);
     }
     else
     {
-        bool ret = (ptcpUser->msgQueue).getMsg(ptcpUser->id,strdata);
+        bool ret = (ptcpUser->msgQueue).getMsg(ptcpUser->id,jMsg);
         if(ret)
+        {
+            if(jMsg["typecode"].asInt() == 1540)
+                
+            strdata = writer.write(jMsg);
             ptcpUser->MyWrite(strdata);
+        }    
     }
 }
 
 TcpUser::~TcpUser() 
 {
-	event_free(readEvt);
-	event_free(writeEvt);
-	close(sock_fd);
+    event_free(readEvt);
+    event_free(writeEvt);
+    close(sock_fd);
     if(username == "")
     {
-	   debug("a tcp user was deleted");
+       debug("a tcp user was deleted");
     }
     else
     {

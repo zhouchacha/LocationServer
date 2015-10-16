@@ -71,7 +71,7 @@ public:
 	 * @param  strdata 引用参数，返回信息
 	 * @return         成功返回ture，失败返回fal
 	 */
-	bool getMsg(int id,string &strdata);
+	bool getMsg(int id,Json::Value &jMsg);
 
 	/*
 	描述：清除ID为id的用户的定位、导引请求和结果，

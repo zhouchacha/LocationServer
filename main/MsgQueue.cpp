@@ -64,8 +64,8 @@ int MsgQueue::startGuide(int &id, std::pair<int,int> &sour, std::pair<int,int> &
 	Json::Value value = req.second;
 
 	int sx = value["sour"]["x"].asInt();
-	
 	int sy = value["sour"]["y"].asInt();
+	debug("sx:%d,sy:%d",sx,sy);
 	int dx = value["dest"]["x"].asInt();
 	int dy = value["dest"]["y"].asInt();
 	sour = std::make_pair(sx,sy);
@@ -104,15 +104,12 @@ void MsgQueue::finishGuide(int id, const std::vector<std::pair<int,int> > &path)
 	debug("add an resolut to GuideeVec[%d]",id);
 }
 
-bool MsgQueue::getMsg(int id,string &strdata)
+bool MsgQueue::getMsg(int id,Json::Value &jMsg)
 {
-	Json::Value jMsg;
-	Json::FastWriter writer;
 	if((LocatedVec.size() > id) && (LocatedVec[id].size() > 0))
 	{
 		jMsg = LocatedVec[id].front();
 		jMsg["typecode"] = 1540;
-		strdata = writer.write(jMsg);
 		LocatedVec[id].pop();
 		return true;
 	}
@@ -120,7 +117,6 @@ bool MsgQueue::getMsg(int id,string &strdata)
 	{
 		jMsg = GuidedVec[id].front();
 		jMsg["typecode"] = 1510;
-		strdata = writer.write(jMsg);
 		GuidedVec[id].pop();
 		return true;
 	}
