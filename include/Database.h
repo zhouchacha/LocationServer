@@ -61,7 +61,7 @@ class Database
         static int  NameLogoutHandle(string &username);
         static int  TelLogoutHandle(string &usertel);
         
-        static int LocationHandleData(int &apid,vector<Locate>&vect);
+        static int LocationHandleData(multimap<string mac, tuple<vector<string>,int ,int > > &dbfingers);
         static int GuideHandleData(map<int,node > &nodeMap,map<int,edge> &edgeMap);
        
         static int UserPositionsHandle(string &username, int positionX, int positionY);

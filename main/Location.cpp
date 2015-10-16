@@ -15,9 +15,12 @@ using Json::FastWriter;
 using Json::Value;
 using Json::Reader;
 
-Location::Location(MsgQueue *msgQueue):msgQueue(msgQueue)
+
+void Location::init(void)
 {
-	getData();
+	//获取指纹数据
+	// GetLocationData(fingers);
+
 	pthread_t p;
 	if(pthread_create(&p, NULL, run, this) == -1)
 	{
@@ -33,30 +36,10 @@ Location::Location(MsgQueue *msgQueue):msgQueue(msgQueue)
 Location::~Location()
 {
 #if TEST
-	record();
+	record(); //记录测试结果
 #endif
 }
 
-void Location::getData(void)	//把数据库里的指纹数据加载到dbfingers 和 points里
-{
-	int apid=1;
-    for(apid=1; apid<4 ; apid++) {
-        vector<Locate> v;
-        vector<string> vs;
-        if(Database::LocationHandleData(apid,v) == 1541)
-        	debug("get data error");
-        	
-        Locate l = v[0];
-        Point tmp(apid, l.getPositionx(), l.getPositiony());
-        points.push_back(tmp);
-        for(vector<Locate>::iterator it=v.begin(); it!=v.end(); it++)
-        {
-            Locate l = *it;
-            vs.push_back(l.getFingerdetail());
-        }
-        dbfingers.insert(make_pair(apid,vs));
-    }
-}
 
 void* Location::run(void *arg)
 {
@@ -71,15 +54,14 @@ void* Location::run(void *arg)
    		//获取待定位数据
         if((thislo->msgQueue)->startLoc(id,rssi) == -1)
             continue;
-       /* 
+      
         //定位
         debug("start to locate");
-        Point ret = thislo->Location1(rssi, thislo->points, thislo->dbfingers);
-        */
+        pair<int,int> ret = thislo->Location1(rssi, thislo->points, thislo->dbfingers);
+
         //定位结果
         debug("after locate");
-        (thislo->msgQueue)->finishLoc(id,make_tuple(2,2,2));
-        // (thislo->msgQueue)->finishLoc(id,make_tuple(ret.xposition,ret.yposition,2));
+        (thislo->msgQueue)->finishLoc(id,make_tuple(ret.first,ret.second,2));
         
         //测试定位时间
 		#if TEST
@@ -89,7 +71,7 @@ void* Location::run(void *arg)
     }
 }
 
-Point Location::Location1(const string& rssiInfo,  const vector<Point>& points, const map<int, vector<string>>& dbfinger){
+pair<int,int> Location::Location(const string& rssiInfo,,const multimap<int,tuple<string, int, int>& fingers){
 	Point point;
 	map<string, double> rssiMap = Util::StringToMap(rssiInfo);
 	map<string, double>::const_iterator iter = rssiMap.begin();
