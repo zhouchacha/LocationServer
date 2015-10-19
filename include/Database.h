@@ -2,7 +2,8 @@
 #define DTAT_BASE_H
 
 #include <vector>
-#include <Locate.h>
+#include <map>
+#include <tuple>
 #include <Guide.h>
 #include <ConnPool.h>
 using namespace std;
@@ -61,10 +62,10 @@ class Database
         static int  NameLogoutHandle(string &username);
         static int  TelLogoutHandle(string &usertel);
         
-        static int LocationHandleData(multimap<string mac, tuple<vector<string>,int ,int > > &dbfingers);
-        static int GuideHandleData(map<int,node > &nodeMap,map<int,edge> &edgeMap);
+        static int getLocationData(multimap<string, tuple<string,int,int> >&fingers);
+        static int getGuideData(map<int,node > &nodeMap,map<int,edge> &edgeMap);
        
-        static int UserPositionsHandle(string &username, int positionX, int positionY);
+        static int recordUserPosition(string &username, int positionX, int positionY);
         static int GetHistory(string &username,int num,vector<string> &data,vector<vector<string> >&roadPosition);
         static int  deleteOneHistory(string &username,vector<string> &data);
         static int  deleteAllHistory(string &username);

@@ -95,7 +95,7 @@ int  Database::NameLoginHandle(string &username, string &password) {
         int typecode;
         PreparedStatement *pstmt;
         Connection *conn = pool->GetConnection();
-        //conn->setAutoCommit(false);
+        cout<<"Database::NameLoginHandle."<<endl;
         conn->setSchema(database);
 
         string sql = "SELECT * FROM users WHERE username=?";
@@ -162,7 +162,7 @@ int  Database::TelLoginHandle(string &usertel, string &password) {
          Connection *conn = pool->GetConnection();
          //conn->setAutoCommit(false);
          conn->setSchema(database);
-
+         cout<<"Database::TelLoginHandle()"<<endl;
          string sql = "SELECT * FROM users WHERE usertel=?";
          pstmt = conn->prepareStatement(sql);
          pstmt->setString(1, usertel);
@@ -224,11 +224,13 @@ int  Database::TelLoginHandle(string &usertel, string &password) {
 //临时用户使用未注册的usertel登录
 int  Database::TelNotLoginHandle(string &usertel) {
     try {
+         cout<<"Database::TelNotLoginHandle()."<<endl;
          int typecode;
          PreparedStatement *pstmt;
          Connection *conn = pool->GetConnection();
          //conn->setAutoCommit(false);
          conn->setSchema(database);
+
          string sql = "SELECT * FROM users WHERE usertel=?";
          pstmt = conn->prepareStatement(sql);
          pstmt->setString(1, usertel);
@@ -283,7 +285,7 @@ int  Database::TelNotLoginHandle(string &usertel) {
 int  Database::NameLogoutHandle(string &username) {
     try {
 
-        
+        cout<<"Database::NameLogoutHandle()."<<endl;
         int typecode;        
         cout<<"NameLogoutHandle()"<<endl;
         Connection *conn = pool->GetConnection();
@@ -334,7 +336,7 @@ int  Database::NameLogoutHandle(string &username) {
 //usertel登出
 int   Database::TelLogoutHandle(string &usertel) {
     try {
-
+         cout<<"Database::TelLogoutHandle()."<<endl;
         int typecode;
         cout<<"TelLogoutHandle()"<<endl;
         Connection *conn = pool->GetConnection();
@@ -384,56 +386,34 @@ int   Database::TelLogoutHandle(string &usertel) {
 
 
 //定位2，根据字段apid，返回所需结构体,FingerPrint
-int  Database::LocationHandleData(int &apid,vector<Locate> &vect) {
+int  Database::getLocationData(multimap<string,  tuple<string,int,int> >&fingers) {
     try {
+        cout<<"Database::getLocationData()"<<endl;
+
         int typecode;
 
          PreparedStatement *pstmt;
-         Locate locate;
+         
          int i=1;
          Connection *conn = pool->GetConnection();
          //conn->setAutoCommit(false);
          conn->setSchema(database);
 
-         string sql = "SELECT * FROM FingerPrint WHERE apid=?";
+         string sql = "SELECT * FROM FingerPrint";
     
          pstmt = conn->prepareStatement(sql);
-         pstmt->setInt(1, apid);
+        
          ResultSet *rs= pstmt->executeQuery();
          int flag=0;
          while(rs->next()){
-             /*
-             cout<<rs->getString(1)<<endl;
-             cout<<rs->getInt(2)<<endl;
-             cout<<rs->getString(3)<<endl;
-             cout<<rs->getString(4)<<endl;
-             cout<<rs->getString(5)<<endl;
-             */
-             string s1 = rs->getString(1);
-             int s2 = rs->getInt(2);
-             float s3 = rs->getInt(3);
-             float s4 = rs->getInt(4);
-             string s5 = rs->getString(5);
 
-             /*
-             cout<<"第"<<i<<"个数据为："<<endl;
-             cout<<"s1 = "<<s1<<endl;
-             cout<<"s2 = "<<s2<<endl;
-             cout<<"s3 = "<<s3<<endl;
-             cout<<"s4 = "<<s4<<endl;
-             cout<<"s5 = "<<s5<<endl;
-             cout<<endl;
-             i++;
-             */
-
-             locate.setter(s1, s2, s3, s4, s5);
-             vect.push_back(locate);
-             /*
-             cout<<"locate-apid = "<<locate.getApid()<<endl;
-             root["typecode"] = Value(510);
-             root["locate_apid"] = Value(locate.getApid());
-             content = fastwriter.write(root);
-             */
+             string mac = rs->getString(2);
+             int positionX = rs->getInt(3);
+             int positionY = rs->getInt(4);
+             string fingerData = rs->getString(5);
+             tuple<string,int,int> data(fingerData,positionX,positionY);
+             pair<string,tuple<string,int,int> >locationData(mac,data);
+             fingers.insert(locationData);
              flag=1;
         }
         if(flag==1)
@@ -455,11 +435,11 @@ int  Database::LocationHandleData(int &apid,vector<Locate> &vect) {
     }
 }
 
-int  Database::GuideHandleData(map<int,node > &nodeMap,map<int,edge> &edgeMap)
+int  Database::getGuideData(map<int,node > &nodeMap,map<int,edge> &edgeMap)
 {   
 try{
   
-    
+    cout<<"Database::getGuideData()."<<endl;
     int typecode;
     Connection *conn = pool->GetConnection();
     conn->setSchema(database);
@@ -520,8 +500,9 @@ catch (SQLException &e) {
 }
 
 //用户历史位置信息存储
-int Database::UserPositionsHandle(string &username, int positionX, int positionY) {
+int Database::recordUserPosition(string &username, int positionX, int positionY) {
      try {
+        cout<<"Database::recordUserPosition()."<<endl;
         int flag = false;
         int typecode;
         string usertel;
@@ -529,7 +510,7 @@ int Database::UserPositionsHandle(string &username, int positionX, int positionY
         PreparedStatement *pstmt1;
         Connection *conn = pool->GetConnection();
         Connection *conn1 = pool->GetConnection();
-        cout<<"UserPositionsHandle"<<endl;
+        
         //conn->setAutoCommit(false);
         conn->setSchema("project");
         conn1->setSchema("project");
@@ -710,7 +691,7 @@ try{
   //  PreparedStatement *pstmt1;
     Connection *conn = pool->GetConnection();
    // Connection *conn1 = pool->GetConnection();
-    cout<<"GetHistory"<<endl;
+    cout<<"Database::GetHistory()."<<endl;
 
         //conn->setAutoCommit(false);
     conn->setSchema("project");
@@ -838,7 +819,7 @@ try{
 int  Database::deleteOneHistory(string &username,vector<string> &data){
 try{
     int typecode;
-    cout<<"deleteOneHistory"<<endl;
+    cout<<"Database::deleteOneHistory()."<<endl;
 
     PreparedStatement *pstmt ;
     Connection *conn = pool->GetConnection();
@@ -885,7 +866,7 @@ try{
 int Database::deleteAllHistory(string &username){
 try{
     int typecode;
-    cout<<"deleteHistory"<<endl;
+    cout<<"Database::deleteHistory()."<<endl;
 
     PreparedStatement *pstmt ;
     Connection *conn = pool->GetConnection();

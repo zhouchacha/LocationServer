@@ -284,7 +284,8 @@ void Guide::loadMap()
 	    nodeMap.insert(pair<int, node>(newnode[i].m_index, newnode[i]));//ÏòÈÝÆ÷ÖÐ²åÈë½ÚµãÔªËØ
 	}
 	fin.close();*/
-	Database::GuideHandleData(nodeMap,edgeMap);
+	Database::getGuideData(nodeMap,edgeMap);
+
 }
 
 int Guide::getIndexStart(double point_x, double point_y) {   //

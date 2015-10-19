@@ -12,12 +12,16 @@ using std::string;
 #include <map>
 using std::multimap;
 
+#include <tuple>
+using std::tuple;
+
 #include <utility>
+using std::pair;
 
 class Location
 {
 public:
-	Location(MsgQueue *msgQueue)：msgQueue(msgQueue){};
+	Location(MsgQueue *msgQueue):msgQueue(msgQueue){};
 	~Location();
 
 
@@ -47,7 +51,18 @@ public:
 	 * 
 	 * @return 定位结果，依次分别为x,y.
 	 */
-	pair<int,int> Location(const string& rssiInfo,,const multimap<int,tuple<string, int, int>& fingers);
+	pair<int,int> Locating(const string& rssiInfo);
+
+
+	/**
+	 * @brief 获取当前计算需要的指纹库
+	 * @details 根据mac1,mac2为最大的RSSI对应的指纹返回。
+	 * 
+	 * @param mac1 用户发来RSSI中第一大的值对应的mac
+	 * @param mac2 用户发来RSSI中第二大的值对应的mac
+	 * @param curFinger mac1,mac2为最大rssi对应的mac
+	 */
+	void getCurFinger(string mac1,string mac2,std::vector<tuple<string,int,int> > &curFinger);
 
 
 	/**
