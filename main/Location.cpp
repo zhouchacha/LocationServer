@@ -107,10 +107,11 @@ pair<int,int> Location::Locating(const string& rssiInfo){
     //  String mac3 = unworkapmac;  //关闭服务的AP的mac
 	cout<<mac1<<endl;
 	cout<<mac2<<endl;
-	//获取所需的指纹数据
-	std::vector<tuple<string,int,int> > curFinger;
-	getCurFinger(mac1,mac2);
 
+	//获取所需的指纹数据
+	std::map<int,std::vector<string> > curFinger;
+	std::vector<Point> points;
+	getCurFinger(mac1,mac2,curFinger,points);
 
  	int* weight = new int[size];
  	//数据库中所有ap   一个map常量
@@ -133,8 +134,8 @@ pair<int,int> Location::Locating(const string& rssiInfo){
  	}
  	for (int i = 0; i < size; i++)
  	{
- 		map<int,vector<string>>::const_iterator iter = dbfinger.find(points[i].nodeid);
- 		if (iter == dbfinger.end())
+ 		map<int,vector<string>>::const_iterator iter = curFinger.find(points[i].nodeid);
+ 		if (iter == curFinger.end())
  		{
 		
  		}
@@ -206,30 +207,57 @@ pair<int,int> Location::Locating(const string& rssiInfo){
 }
 */
 
-	return make_pair(2,2);
+	return make_pair(point.xposition,point.yposition);
 }
 
-void Location::getCurFinger(string mac1,string mac2,std::vector<tuple<string,int,int> > &curFinger)
+void Location::getCurFinger(string mac1,string mac2,std::map<int,std::vector<string> > &curFinger,std::vector<Point> &points)
 {
+	int id = 1;	//标记点
 	for(auto temp = fingers.begin();temp != fingers.end();++temp)
 	{
 		if((temp->first == mac1) || (temp->first == mac2))
 		{
 			auto range = fingers.equal_range(temp->first);
+
 			for(auto item = range.first;item != range.second;++item)
 			{
-				curFinger.push_back(item->second);
+				//从multimap取出对应的tuple
+				std::tuple<string,int,int> onefinger = item->second;
+				
+				for(auto item = points.begin(); ;++item)
+				{
+					//如果坐标已经在points里，则把string加入到curfinder对应index的vector里
+					if((item->xposition == get<1>(onefinger)) && item->yposition==get<2>(onefinger))
+					{
+						int index = item->nodeid;
+						curFinger[index].push_back(get<0>(onefinger));
+						break;
+					}
+
+					//如果不在points里，则往points中加入新的point，则把string加入到curfinder对应index的vector里
+					if(item == points.end())
+					{
+						int index = points.size();
+						Point pt(index,get<1>(onefinger),get<2>(onefinger));
+						points.push_back(pt);
+						std::vector<string> fing;
+						fing.push_back(get<0>(onefinger));
+						curFinger.insert(std::make_pair(index,fing));
+						break;
+					}
+				}
 			}
+
 			temp = --(range.second);
 		}
 	}
 
 	//for test
-	for(auto temp = curFinger.begin();temp != curFinger.end();++temp)
+/*	for(auto temp = curFinger.begin();temp != curFinger.end();++temp)
 	{
 		debug("string:%s, x:%d, y%d",(get<0>(*temp)).c_str(),get<1>(*temp),get<2>(*temp));
 	}
-}
+*/}
 
 int Location::test(void)
 {
