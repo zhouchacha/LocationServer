@@ -17,6 +17,8 @@ using std::tuple;
 
 #include <utility>
 using std::pair;
+ 
+#include <point.h>
 
 class Location
 {
@@ -62,7 +64,7 @@ public:
 	 * @param mac2 用户发来RSSI中第二大的值对应的mac
 	 * @param curFinger mac1,mac2为最大rssi对应的mac
 	 */
-	void getCurFinger(string mac1,string mac2,std::vector<tuple<string,int,int> > &curFinger);
+	void getCurFinger(string mac1,string mac2,std::map<int,std::vector<string> > &curFinger,std::vector<point> &points);
 
 
 	/**
