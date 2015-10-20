@@ -159,7 +159,7 @@ TcpServer-TcpUser.o: TcpUser.cpp /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/shared_ptr.h \
  /usr/include/c++/4.8/bits/shared_ptr_base.h \
  /usr/include/c++/4.8/backward/auto_ptr.h ../include/Database.h \
- ../include/Locate.h ../include/Guide.h /usr/include/math.h \
+ ../include/Guide.h /usr/include/math.h \
  /usr/include/i386-linux-gnu/bits/huge_val.h \
  /usr/include/i386-linux-gnu/bits/huge_valf.h \
  /usr/include/i386-linux-gnu/bits/huge_vall.h \
@@ -1024,8 +1024,6 @@ TcpServer-TcpUser.o: TcpUser.cpp /usr/include/stdc-predef.h \
 /usr/include/c++/4.8/backward/auto_ptr.h:
 
 ../include/Database.h:
-
-../include/Locate.h:
 
 ../include/Guide.h:
 

@@ -93,8 +93,8 @@ PROGRAMS = $(bin_PROGRAMS)
 am_TcpServer_OBJECTS = TcpServer-main.$(OBJEXT) \
 	TcpServer-TcpServer.$(OBJEXT) TcpServer-TcpUser.$(OBJEXT) \
 	TcpServer-ConnPool.$(OBJEXT) TcpServer-Database.$(OBJEXT) \
-	TcpServer-Guide.$(OBJEXT) TcpServer-Point.$(OBJEXT) \
-	TcpServer-Util.$(OBJEXT) TcpServer-Location.$(OBJEXT) \
+	TcpServer-Guide.$(OBJEXT) TcpServer-Util.$(OBJEXT) \
+	TcpServer-Point.$(OBJEXT) TcpServer-Location.$(OBJEXT) \
 	TcpServer-MsgQueue.$(OBJEXT)
 TcpServer_OBJECTS = $(am_TcpServer_OBJECTS)
 TcpServer_DEPENDENCIES =
@@ -253,7 +253,7 @@ top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
 AUTOMAKE_OPTIONS = foreign
-TcpServer_SOURCES = main.cpp TcpServer.cpp TcpUser.cpp  ConnPool.cpp Database.cpp Guide.cpp Point.cpp Util.cpp Location.cpp MsgQueue.cpp
+TcpServer_SOURCES = main.cpp TcpServer.cpp TcpUser.cpp  ConnPool.cpp Database.cpp Guide.cpp Util.cpp Point.cpp Location.cpp MsgQueue.cpp
 TcpServer_LDADD = -ljson -levent -lmysqlcppconn -lpthread
 TcpServer_CXXFLAGS = -I$(top_srcdir)/include
 all: all-am
@@ -452,20 +452,6 @@ TcpServer-Guide.obj: Guide.cpp
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -c -o TcpServer-Guide.obj `if test -f 'Guide.cpp'; then $(CYGPATH_W) 'Guide.cpp'; else $(CYGPATH_W) '$(srcdir)/Guide.cpp'; fi`
 
-TcpServer-Point.o: Point.cpp
-	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -MT TcpServer-Point.o -MD -MP -MF $(DEPDIR)/TcpServer-Point.Tpo -c -o TcpServer-Point.o `test -f 'Point.cpp' || echo '$(srcdir)/'`Point.cpp
-	$(AM_V_at)$(am__mv) $(DEPDIR)/TcpServer-Point.Tpo $(DEPDIR)/TcpServer-Point.Po
-#	$(AM_V_CXX)source='Point.cpp' object='TcpServer-Point.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -c -o TcpServer-Point.o `test -f 'Point.cpp' || echo '$(srcdir)/'`Point.cpp
-
-TcpServer-Point.obj: Point.cpp
-	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -MT TcpServer-Point.obj -MD -MP -MF $(DEPDIR)/TcpServer-Point.Tpo -c -o TcpServer-Point.obj `if test -f 'Point.cpp'; then $(CYGPATH_W) 'Point.cpp'; else $(CYGPATH_W) '$(srcdir)/Point.cpp'; fi`
-	$(AM_V_at)$(am__mv) $(DEPDIR)/TcpServer-Point.Tpo $(DEPDIR)/TcpServer-Point.Po
-#	$(AM_V_CXX)source='Point.cpp' object='TcpServer-Point.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -c -o TcpServer-Point.obj `if test -f 'Point.cpp'; then $(CYGPATH_W) 'Point.cpp'; else $(CYGPATH_W) '$(srcdir)/Point.cpp'; fi`
-
 TcpServer-Util.o: Util.cpp
 	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -MT TcpServer-Util.o -MD -MP -MF $(DEPDIR)/TcpServer-Util.Tpo -c -o TcpServer-Util.o `test -f 'Util.cpp' || echo '$(srcdir)/'`Util.cpp
 	$(AM_V_at)$(am__mv) $(DEPDIR)/TcpServer-Util.Tpo $(DEPDIR)/TcpServer-Util.Po
@@ -479,6 +465,20 @@ TcpServer-Util.obj: Util.cpp
 #	$(AM_V_CXX)source='Util.cpp' object='TcpServer-Util.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -c -o TcpServer-Util.obj `if test -f 'Util.cpp'; then $(CYGPATH_W) 'Util.cpp'; else $(CYGPATH_W) '$(srcdir)/Util.cpp'; fi`
+
+TcpServer-Point.o: Point.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -MT TcpServer-Point.o -MD -MP -MF $(DEPDIR)/TcpServer-Point.Tpo -c -o TcpServer-Point.o `test -f 'Point.cpp' || echo '$(srcdir)/'`Point.cpp
+	$(AM_V_at)$(am__mv) $(DEPDIR)/TcpServer-Point.Tpo $(DEPDIR)/TcpServer-Point.Po
+#	$(AM_V_CXX)source='Point.cpp' object='TcpServer-Point.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -c -o TcpServer-Point.o `test -f 'Point.cpp' || echo '$(srcdir)/'`Point.cpp
+
+TcpServer-Point.obj: Point.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -MT TcpServer-Point.obj -MD -MP -MF $(DEPDIR)/TcpServer-Point.Tpo -c -o TcpServer-Point.obj `if test -f 'Point.cpp'; then $(CYGPATH_W) 'Point.cpp'; else $(CYGPATH_W) '$(srcdir)/Point.cpp'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/TcpServer-Point.Tpo $(DEPDIR)/TcpServer-Point.Po
+#	$(AM_V_CXX)source='Point.cpp' object='TcpServer-Point.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -c -o TcpServer-Point.obj `if test -f 'Point.cpp'; then $(CYGPATH_W) 'Point.cpp'; else $(CYGPATH_W) '$(srcdir)/Point.cpp'; fi`
 
 TcpServer-Location.o: Location.cpp
 	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(TcpServer_CXXFLAGS) $(CXXFLAGS) -MT TcpServer-Location.o -MD -MP -MF $(DEPDIR)/TcpServer-Location.Tpo -c -o TcpServer-Location.o `test -f 'Location.cpp' || echo '$(srcdir)/'`Location.cpp

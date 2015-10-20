@@ -136,11 +136,10 @@ TcpServer-Guide.o: Guide.cpp /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/posix_opt.h \
  /usr/include/i386-linux-gnu/bits/environments.h \
  /usr/include/i386-linux-gnu/bits/confname.h /usr/include/getopt.h \
- ../include/define.h ../include/Database.h ../include/Locate.h \
- ../include/ConnPool.h /usr/include/mysql_connection.h \
- /usr/include/cppconn/connection.h /usr/include/boost/variant.hpp \
- /usr/include/boost/variant/variant.hpp /usr/include/c++/4.8/cstddef \
- /usr/include/c++/4.8/typeinfo \
+ ../include/define.h ../include/Database.h ../include/ConnPool.h \
+ /usr/include/mysql_connection.h /usr/include/cppconn/connection.h \
+ /usr/include/boost/variant.hpp /usr/include/boost/variant/variant.hpp \
+ /usr/include/c++/4.8/cstddef /usr/include/c++/4.8/typeinfo \
  /usr/include/boost/variant/detail/config.hpp \
  /usr/include/boost/config.hpp /usr/include/boost/config/user.hpp \
  /usr/include/boost/config/select_compiler_config.hpp \
@@ -942,8 +941,6 @@ TcpServer-Guide.o: Guide.cpp /usr/include/stdc-predef.h \
 ../include/define.h:
 
 ../include/Database.h:
-
-../include/Locate.h:
 
 ../include/ConnPool.h:
 
