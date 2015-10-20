@@ -2,7 +2,7 @@
 #include <define.h>
 #include <Location.h>
 #include <Database.h>
-
+#include <algorithm>
 #include <sys/time.h>
 #include <stdio.h>
 
@@ -87,67 +87,125 @@ void* Location::run(void *arg)
 pair<int,int> Location::Locating(const string& rssiInfo){
 	
 	map<string, double> rssiMap = Util::StringToMap(rssiInfo);
-	map<string, double>::const_iterator iter = rssiMap.begin();
-
+	//map<string, double>::const_iterator iter = rssiMap.begin();
+    //排序  将map的key和value组成一个新的结构PAIR，一个PAIR型的vector存储map中的所有内容，对vector按照value值进行排序。
+	typedef pair<string, double> PAIR;  
+    int cmp(const PAIR &x, const PAIR &y)  
+        {  
+             return x.second > y.second;  
+        }  
+    vector<PAIR> pair_vec;
+    for (map<string, double>::iterator iter = rssiMap.begin(); iter != rssiMap.end(); ++iter)  
+       {  
+           pair_vec.push_back(make_pair(iter->first, iter->second));  
+       }  
+        sort(pair_vec.begin(), pair_vec.end(), cmp); 
+	vector<PAIR>::iterator afteriter = pair_vec.begin();  
+    string mac1 = (*afteriter).first; 
+	iter++;
+    string mac2 = (*afteriter).first;    
+    //  String mac3 = unworkapmac;  //关闭服务的AP的mac
+	cout<<mac1<<endl;
+	cout<<mac2<<endl;
 	//获取所需的指纹数据
-	// std::vector<tuple<string,int,int> > curFinger;
-	// getCurFinger();
+	std::vector<tuple<string,int,int> > curFinger;
+	getCurFinger(mac1,mac2);
 
 
-// 	int* weight = new int[size];
-// 	//数据库中所有ap   一个map常量
-// 	string rssiap = "b0:48:7a:5d:f3:28,-52;20:dc:e6:6b:73:46,-86;c0:61:18:7a:6f:5a,-43;c0:18:85:81:9a:e5,-76;30:49:3b:09:68:27,-57;30:49:3b:09:68:25,-67;20:dc:e6:6d:13:0e,-78;42:7c:8f:78:b8:e4,-73;30:49:3b:09:6b:49,-88;30:49:3b:09:6a:4f,-79;5c:ac:4c:be:47:de,-63;38:83:45:96:c7:6c,-90;d8:15:0d:38:5b:4e,-80;50:bd:5f:06:72:84,-91;e4:d3:32:85:87:30,-80;5c:63:bf:37:27:6c,-78;30:49:3b:09:6b:4b,-85;74:ea:3a:2f:6d:0a,-88;e4:d3:32:eb:f9:f2,-86;20:dc:e6:6b:36:10,-89;30:49:3b:09:6a:45,-86;42:7c:8f:78:b8:e4,-73;20:dc:e6:6d:13:0e,-78;00:36:76:14:a2:3d,-91;50:bd:5f:04:e1:ac,-91;e4:d3:32:e3:fc:38,-91;20:dc:e6:88:5b:5e,-91;38:83:45:47:51:84,-88;30:49:3b:09:6a:4b,-89;14:75:90:58:fa:ec,-92;30:49:3b:09:6a:61,-93;78:d7:52:cd:92:70,-91;e0:05:c5:b3:d3:9e,-91;30:49:3b:09:6a:59,-91;50:bd:5f:49:3f:02,-91;00:36:76:04:ef:ae,-91;20:dc:e6:54:ff:ae,-92;24:05:0f:3f:ea:07,-90;c4:17:fe:83:dc:d4,-91;ec:88:8f:4d:95:6c,-92;50:bd:5f:84:18:99,-91;78:a1:06:fd:41:84,-90;20:dc:e6:3b:dd:d6,-93;08:57:00:65:5e:7c,-84;80:89:17:e5:8e:e0,-96;74:ea:3a:26:10:86,-91;c8:e7:d8:45:6a:54,-88;ec:6c:9f:04:c6:64,-95;20:dc:e6:6a:37:ac,-92;30:49:3b:09:6a:69,-95;30:49:3b:09:6a:4d,-94;30:49:3b:09:6a:d1,-85;14:e6:e4:34:ab:c8,-95;00:36:76:01:6e:a8,-89;ec:88:8f:63:63:88,-91;c8:3a:35:03:3d:c0,-91;42:7c:8f:78:f2:b4,-87;00:25:86:51:b9:58,-86;30:49:3b:09:6a:6d,-95;2a:5d:60:e6:97:f4,-89;20:dc:e6:6b:35:a2,-93;20:dc:e6:69:6a:74,-90;50:bd:5f:04:ee:12,-91;08:10:74:67:5a:36,-93;40:16:9f:23:b9:ea,-91;30:49:3b:09:6b:81,-88;30:49:3b:09:68:19,-90;2a:59:f9:04:99:26,-93;6c:e8:73:b2:29:c6,-94;30:49:3b:09:68:1f,-97;30:49:3b:09:6a:49,-90;30:49:3b:09:6a:57,-90;ec:6c:9f:01:f3:d4,-90;30:49:3b:09:67:d9,-91;74:ea:3a:2f:6d:0a,-88;e4:d3:32:85:87:30,-80;00:23:cd:83:7d:a0,-93;00:0b:85:91:a3:4c,-93;78:52:62:1d:05:44,-91"  ;
-			
-// 	//rssiMap , mpaap算出新加入apnum
-// 	map<string, double> mapap = Util::StringToMap(rssiap);
-// 	int apnum = 0;
-// //比较map1 中ap iter.first 是否在mapap中，iter++,sum++,为新加入的ap
-// 	while (iter!=rssiMap.end()){
-// 		string key = iter->first;  //取AP的MAC值
-// 		map<string, double>::const_iterator iterap = mapap.find(key);
-// 		if (iterap != mapap.end()){
-// 			apnum++;
-// 			}
-// 			iter++;
-// 			}	
-// 		// cout<<"apnum:"<<apnum<<endl;
-// 	for (int i = 0; i < size; i++){
-// 		weight[i] = 0;
-// 	}
-// 	for (int i = 0; i < size; i++)
-// 	{
-// 		map<int,vector<string>>::const_iterator iter = dbfinger.find(points[i].nodeid);
-// 		if (iter == dbfinger.end())
-// 		{
+ 	int* weight = new int[size];
+ 	//数据库中所有ap   一个map常量
+	string rssiap = "e4:d3:32:db:25:fe,-55;e4:d3:32:db:27:04,-57;e4:d3:32:db:26:3c,-59;e4:d3:32:db:26:fc,-59;e4:d3:32:db:26:f2,-58;b0:48:7a:5d:f3:28,-52;20:dc:e6:6b:73:46,-86;c0:61:18:7a:6f:5a,-43;c0:18:85:81:9a:e5,-76;30:49:3b:09:68:27,-57;30:49:3b:09:68:25,-67;20:dc:e6:6d:13:0e,-78;42:7c:8f:78:b8:e4,-73;30:49:3b:09:6b:49,-88;30:49:3b:09:6a:4f,-79;5c:ac:4c:be:47:de,-63;38:83:45:96:c7:6c,-90;d8:15:0d:38:5b:4e,-80;50:bd:5f:06:72:84,-91;e4:d3:32:85:87:30,-80;5c:63:bf:37:27:6c,-78;30:49:3b:09:6b:4b,-85;74:ea:3a:2f:6d:0a,-88;e4:d3:32:eb:f9:f2,-86;20:dc:e6:6b:36:10,-89;30:49:3b:09:6a:45,-86;42:7c:8f:78:b8:e4,-73;20:dc:e6:6d:13:0e,-78;00:36:76:14:a2:3d,-91;50:bd:5f:04:e1:ac,-91;e4:d3:32:e3:fc:38,-91;20:dc:e6:88:5b:5e,-91;38:83:45:47:51:84,-88;30:49:3b:09:6a:4b,-89;14:75:90:58:fa:ec,-92;30:49:3b:09:6a:61,-93;78:d7:52:cd:92:70,-91;e0:05:c5:b3:d3:9e,-91;30:49:3b:09:6a:59,-91;50:bd:5f:49:3f:02,-91;00:36:76:04:ef:ae,-91;20:dc:e6:54:ff:ae,-92;24:05:0f:3f:ea:07,-90;c4:17:fe:83:dc:d4,-91;ec:88:8f:4d:95:6c,-92;50:bd:5f:84:18:99,-91;78:a1:06:fd:41:84,-90;20:dc:e6:3b:dd:d6,-93;08:57:00:65:5e:7c,-84;80:89:17:e5:8e:e0,-96;74:ea:3a:26:10:86,-91;c8:e7:d8:45:6a:54,-88;ec:6c:9f:04:c6:64,-95;20:dc:e6:6a:37:ac,-92;30:49:3b:09:6a:69,-95;30:49:3b:09:6a:4d,-94;30:49:3b:09:6a:d1,-85;14:e6:e4:34:ab:c8,-95;00:36:76:01:6e:a8,-89;ec:88:8f:63:63:88,-91;c8:3a:35:03:3d:c0,-91;42:7c:8f:78:f2:b4,-87;00:25:86:51:b9:58,-86;30:49:3b:09:6a:6d,-95;2a:5d:60:e6:97:f4,-89;20:dc:e6:6b:35:a2,-93;20:dc:e6:69:6a:74,-90;50:bd:5f:04:ee:12,-91;08:10:74:67:5a:36,-93;40:16:9f:23:b9:ea,-91;30:49:3b:09:6b:81,-88;30:49:3b:09:68:19,-90;2a:59:f9:04:99:26,-93;6c:e8:73:b2:29:c6,-94;30:49:3b:09:68:1f,-97;30:49:3b:09:6a:49,-90;30:49:3b:09:6a:57,-90;ec:6c:9f:01:f3:d4,-90;30:49:3b:09:67:d9,-91;74:ea:3a:2f:6d:0a,-88;e4:d3:32:85:87:30,-80;00:23:cd:83:7d:a0,-93;00:0b:85:91:a3:4c,-93;78:52:62:1d:05:44,-91"  ;
+
+ 	map<string, double> mapap = Util::StringToMap(rssiap);
+ 	int apnum = 0;
+    //比对ap的mac全库
+ 	while (iter!=rssiMap.end()){
+ 		string key = iter->first;  
+ 		map<string, double>::const_iterator iterap = mapap.find(key);
+ 		if (iterap != mapap.end()){
+ 			apnum++;
+ 			}
+ 			iter++;
+ 			}	
+ 		// cout<<"apnum:"<<apnum<<endl;
+ 	for (int i = 0; i < size; i++){
+ 		weight[i] = 0;
+ 	}
+ 	for (int i = 0; i < size; i++)
+ 	{
+ 		map<int,vector<string>>::const_iterator iter = dbfinger.find(points[i].nodeid);
+ 		if (iter == dbfinger.end())
+ 		{
 		
-// 		}
-// 		vector<string> fingerOneDbRssi = iter->second;
-// 		for(string rssi:fingerOneDbRssi)
-// 		{
-// 			map<string, double>rssiMap2 = Util::StringToMap(rssi);
-// 			double result = Util::MapMatch(rssiMap, rssiMap2,apnum);
-// 			if (result>0.7)
-// 			{
-// 			double  weit =  Util::MapMatchW(rssiMap, rssiMap2);
-// 			int w = (int)weit;
-// 		    weight[i] += w ;
-// 			}
-// 		}
-// 	}
-// 	int sum = 0;
-// 	for (int k= 0; k < size; k++) 
-// 	{
-// 			sum += weight[k];
-// 	}
+ 		}
+ 		vector<string> fingerOneDbRssi = iter->second;
+ 		for(string rssi:fingerOneDbRssi)
+ 		{
+ 			map<string, double>rssiMap2 = Util::StringToMap(rssi);
+ 			double result = Util::MapMatch(rssiMap, rssiMap2,apnum);
+ 			if (result>0.7)
+ 			{
+ 			double  weit =  Util::MapMatchW(rssiMap, rssiMap2);
+ 			int w = (int)weit;
+ 		    weight[i] += w ;
+ 			}
+ 		}
+ 	}
+ 	int sum = 0;
+ 	for (int k= 0; k < size; k++) 
+ 	{
+ 			sum += weight[k];
+ 	}
 	
-// 	for (int i = 0; i < size; i++) 
-// 	{
-// 		//cout<<"weight:"<<weight[i]<<endl;
-// 		point.xposition += points[i].xposition * weight[i]  / sum+0.001	;
-// 		point.yposition += points[i].yposition * weight[i]  / sum+0.001;
-// 	}
+ 	for (int i = 0; i < size; i++) 
+ 	{
+ 		//cout<<"weight:"<<weight[i]<<endl;
+ 		point.xposition += points[i].xposition * weight[i]  / sum+0.001	;
+ 		point.yposition += points[i].yposition * weight[i]  / sum+0.001;
+ 	}
 
 	//cout<<"location:"<<point.xposition<<", "<<point.yposition<<endl;
+/*	
+//knn算法
+	int MaxPointNum[3]={0}; 
+     
+    void sort2(int b[],int NUM) 
+   { 
+    int i=0; 
+    int j=0; 
+    int MaxTemp; 
+    int Record=0; 
+    while(j < 3) 
+    { 
+        MaxTemp=b[0]; 
+        Record=0; 
+        for(i=0; i<NUM; i++) 
+        { 
+            if(b[i]>MaxTemp) 
+            { 
+                Record=i; 
+                MaxTemp=b[i]; 
+            } 
+        } 
+        b[Record]=0; 
+        MaxPointNum[j]=Record; 
+        j++; 
+    } 
+} 
+    sort2(weight,size);
+	for(int i=0; i<3; i++) 
+    { 
+        //cout<<MaxPointNum[i]<<endl; 
+		//cout<<"weight:"<<weight[i]<<endl;
+		point.xposition += points[MaxPointNum[i]].xposition * weight[MaxPointNum[i]]  / weight[MaxPointNum[0]]+weight[MaxPointNum[1]]+weight[MaxPointNum[2]]+0.001	;
+		point.yposition += points[MaxPointNum[i]].yposition * weight[MaxPointNum[i]]  / weight[MaxPointNum[0]]+weight[MaxPointNum[1]]+weight[MaxPointNum[2]]+0.001;
+	}
+
+	//cout<<"location:"<<point.xposition<<", "<<point.yposition<<endl;
+	return point;
+}
+*/
+
 	return make_pair(2,2);
 }
 
