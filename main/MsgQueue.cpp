@@ -18,7 +18,7 @@ int MsgQueue::startLoc(int &id, string &rssi)
 	//从待定位请求队列里取出
 	auto req = LocateVec.front();
 	id = req.first;
-	rssi = (req.second)["RSSI"].asString();
+	rssi = (req.second)["rssi"].asString();
 	debug("start Locating"); 
 	return 0;
 }

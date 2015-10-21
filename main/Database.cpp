@@ -407,10 +407,10 @@ int  Database::getLocationData(multimap<string,  tuple<string,int,int> >&fingers
          int flag=0;
          while(rs->next()){
 
-             string mac = rs->getString(2);
-             int positionX = rs->getInt(3);
-             int positionY = rs->getInt(4);
-             string fingerData = rs->getString(5);
+             string mac = rs->getString(3);
+             int positionX = rs->getInt(4);
+             int positionY = rs->getInt(5);
+             string fingerData = rs->getString(6);
              tuple<string,int,int> data(fingerData,positionX,positionY);
              pair<string,tuple<string,int,int> >locationData(mac,data);
              fingers.insert(locationData);
