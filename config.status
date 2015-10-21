@@ -437,7 +437,7 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/finder1/server/LocationServer'
+ac_pwd='/usr/finder/LocationServer'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 MKDIR_P='/bin/mkdir -p'
@@ -661,12 +661,12 @@ S["mkdir_p"]="$(MKDIR_P)"
 S["MKDIR_P"]="/bin/mkdir -p"
 S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
 S["STRIP"]=""
-S["install_sh"]="${SHELL} /home/finder1/server/LocationServer/install-sh"
-S["MAKEINFO"]="${SHELL} /home/finder1/server/LocationServer/missing makeinfo"
-S["AUTOHEADER"]="${SHELL} /home/finder1/server/LocationServer/missing autoheader"
-S["AUTOMAKE"]="${SHELL} /home/finder1/server/LocationServer/missing automake-1.14"
-S["AUTOCONF"]="${SHELL} /home/finder1/server/LocationServer/missing autoconf"
-S["ACLOCAL"]="${SHELL} /home/finder1/server/LocationServer/missing aclocal-1.14"
+S["install_sh"]="${SHELL} /usr/finder/LocationServer/install-sh"
+S["MAKEINFO"]="${SHELL} /usr/finder/LocationServer/missing makeinfo"
+S["AUTOHEADER"]="${SHELL} /usr/finder/LocationServer/missing autoheader"
+S["AUTOMAKE"]="${SHELL} /usr/finder/LocationServer/missing automake-1.14"
+S["AUTOCONF"]="${SHELL} /usr/finder/LocationServer/missing autoconf"
+S["ACLOCAL"]="${SHELL} /usr/finder/LocationServer/missing aclocal-1.14"
 S["VERSION"]="1.0"
 S["PACKAGE"]="server"
 S["CYGPATH_W"]="echo"

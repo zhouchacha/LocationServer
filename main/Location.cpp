@@ -84,16 +84,16 @@ void* Location::run(void *arg)
     }
 }
 
+int Location::cmp(const PAIR &x, const PAIR &y)  
+        {  
+             return x.second > y.second;  
+        } 
+
 pair<int,int> Location::Locating(const string& rssiInfo){
 	
 	map<string, double> rssiMap = Util::StringToMap(rssiInfo);
-	//map<string, double>::const_iterator iter = rssiMap.begin();
-    //排序  将map的key和value组成一个新的结构PAIR，一个PAIR型的vector存储map中的所有内容，对vector按照value值进行排序。
-	typedef pair<string, double> PAIR;  
-    int cmp(const PAIR &x, const PAIR &y)  
-        {  
-             return x.second > y.second;  
-        }  
+	map<string, double>::const_iterator iter = rssiMap.begin();
+    //排序  将map的key和value组成一个新的结构PAIR，一个PAIR型的vector存储map中的所有内容，对vector按照value值进行排序。  
     vector<PAIR> pair_vec;
     for (map<string, double>::iterator iter = rssiMap.begin(); iter != rssiMap.end(); ++iter)  
        {  
