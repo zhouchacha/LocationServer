@@ -61,7 +61,7 @@ int TcpUser::Init()
 void TcpUser::DataHandle(string &data)
 {
     debug("handle data");
-    debug("handle data %s",data.c_str());
+    // debug("handle data %s",data.c_str());
     Json::Reader reader;
     Json::Value value;
     int typecode;
@@ -357,7 +357,11 @@ void TcpUser::OnWrite(int sock, short what, void *arg)
         if(ret)
         {
             if(jMsg["typecode"].asInt() == 1540)
-                
+            int ret = Database::recordUserPosition(ptcpUser->username, jMsg["x"].asInt(), jMsg["y"].asInt());
+            if(ret != 402)
+            {
+                debug("record user positin error");
+            }
             strdata = writer.write(jMsg);
             ptcpUser->MyWrite(strdata);
         }    

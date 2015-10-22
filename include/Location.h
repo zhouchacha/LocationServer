@@ -73,10 +73,11 @@ public:
 	/**
 	 * 描述：获取当前时间并存放于locateDuring中，获取定位qq队列中当前请求
 	 * 的个数并存于receiveBufSize中，获取该用户目前返回队列里数据的个数，并
-	 * 存于sendBufsize中。
-	 * 输入：无  输出：0 --成功，-1 --失败
+	 * 存于sendBufsize中。并把当前定位的位置加入到loc_record中。
+	 * 输入：x :x坐标， y:y坐标 
+	 * 输出：0 --成功，-1 --失败
 	 */
-	int test(void);
+	int test(int x,int y);
 	
 
 
@@ -100,6 +101,11 @@ private:
 	 */
 	vector<struct timeval> locateDuring;
 	vector<int> receiveBufSize;
+
+	/**
+	 * 记录定位精度，第一个为X，第二个为y;
+	 */
+	std::vector<std::pair<int,int> > loc_record;
 };
 
 #endif

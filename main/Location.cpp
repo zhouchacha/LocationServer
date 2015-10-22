@@ -73,7 +73,6 @@ void* Location::run(void *arg)
             continue;
       
         //定位
-        // debug("start to locate%s",rssi.c_str());
         pair<int,int> ret = thislo->Locating(rssi);
 
         //定位结果
@@ -82,7 +81,7 @@ void* Location::run(void *arg)
         
         //测试定位时间
 		#if TEST
-   		if(thislo->test()==-1)
+   		if(thislo->test(ret.first,ret.second)==-1)
    			cout<<"error in run"<<endl;
 		#endif
     }
@@ -220,35 +219,21 @@ void Location::getCurFinger(string mac1,string mac2,std::map<int,std::vector<str
 	for(auto temp = fingers.begin();temp != fingers.end();++temp)
 	{
 		auto range = fingers.equal_range(temp->first);
-		// debug("%s size is %d",(temp->first).c_str(),(int)fingers.count(temp->first));
 		string st = (temp->first).substr(0,17);
-
-
-		// int cut=0;
-		// for(auto rangeitem = range.first;rangeitem != range.second;++rangeitem)
-		// {
-		// 	cut++;
-		// }
-		// debug("time:%d",cut);
-
 
 		if((mac1.compare(st) == 0)||(mac2.compare(st) == 0))
 		{
-			int cut=0;
 			for(auto rangeitem = range.first; rangeitem != range.second; ++rangeitem)
 			{
-				cut++;
 				std::tuple<string,int,int> onefinger = rangeitem->second;
 				auto item = points.begin();
 				for(item; item != points.end();++item)
 				{
 					//如果坐标已经在points里，则把string加入到curfinder对应index的vector里
-					// debug("itemx:%d,itemy:%d  fx:%d, fy%d",item->xposition,item->yposition,get<1>(onefinger),get<2>(onefinger));
 					if((item->xposition == get<1>(onefinger)) && item->yposition==get<2>(onefinger))
 					{
 						int index = item->nodeid;
 						curFinger[index].push_back(get<0>(onefinger));
-						// debug("already in points");
 						break;
 					}
 				}
@@ -261,10 +246,8 @@ void Location::getCurFinger(string mac1,string mac2,std::map<int,std::vector<str
 					std::vector<string> fing;
 					fing.push_back(get<0>(onefinger));
 					curFinger.insert(std::make_pair(index,fing));
-					// debug("not in points");
 				}
 			}
-			// debug("time:%d",cut);
 		}
 
 		temp = --(range.second);
@@ -272,18 +255,18 @@ void Location::getCurFinger(string mac1,string mac2,std::map<int,std::vector<str
 
 
 	//for test
-	for(auto temp = curFinger.begin();temp != curFinger.end();++temp)
-	{
-		auto item = *temp;
-		auto flist = item.second;
-		for(auto i=flist.begin();i!= flist.end();++i)
-		{
-			debug("string:%s",(*i).c_str());
-		}
-	}
+	// for(auto temp = curFinger.begin();temp != curFinger.end();++temp)
+	// {
+	// 	auto item = *temp;
+	// 	auto flist = item.second;
+	// 	for(auto i=flist.begin();i!= flist.end();++i)
+	// 	{
+	// 		debug("string:%s",(*i).c_str());
+	// 	}
+	// }
 }
 
-int Location::test(void)
+int Location::test(int x,int y)
 {
 	struct timeval tv;
 	if(gettimeofday(&tv,(struct timezone*)NULL)==-1)
@@ -293,6 +276,8 @@ int Location::test(void)
 	}
 	locateDuring.push_back(tv);
 	receiveBufSize.push_back(msgQueue->getLocateNum());	
+
+	loc_record.push_back(std::make_pair(x,y));
 	return 0;
 }
 
@@ -314,4 +299,10 @@ void Location::record(void)
 		out<<dur<<"us          "<<receiveBufSize[a]<<"items"<<endl;
 	}
 	out.close();
+
+	out.open("jindu.txt");
+	for(int i=0;i<(int)loc_record.size();++i)
+	{
+		out<<i+1<<"	"<<loc_record[i].first<<"	"<<loc_record[i].second<<endl;
+	}
 }
