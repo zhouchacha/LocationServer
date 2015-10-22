@@ -567,7 +567,8 @@ TcpServer-Location.o: Location.cpp /usr/include/stdc-predef.h \
  /usr/include/cppconn/datatype.h \
  /usr/include/cppconn/prepared_statement.h \
  /usr/include/cppconn/statement.h /usr/include/cppconn/resultset.h \
- /usr/include/cppconn/statement.h /usr/include/i386-linux-gnu/sys/time.h
+ /usr/include/cppconn/statement.h /usr/include/i386-linux-gnu/sys/time.h \
+ /usr/include/c++/4.8/cstring /usr/include/string.h
 
 /usr/include/stdc-predef.h:
 
@@ -1886,3 +1887,7 @@ TcpServer-Location.o: Location.cpp /usr/include/stdc-predef.h \
 /usr/include/cppconn/statement.h:
 
 /usr/include/i386-linux-gnu/sys/time.h:
+
+/usr/include/c++/4.8/cstring:
+
+/usr/include/string.h:

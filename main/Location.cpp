@@ -6,6 +6,8 @@
 #include <sys/time.h>
 #include <stdio.h>
 
+#include <cstring>
+
 #include <fstream>
 using std::ofstream;
 
@@ -20,9 +22,9 @@ void Location::init(void)
 	debug("get Location data");
 	//获取指纹数据
 	  Database::getLocationData(fingers);
+
 	//for test
 	  debug("fingers size:%d",(int)fingers.size());
-	  static int num = 0;
 	for(auto temp = fingers.begin();temp != fingers.end();++temp)
 	{
 		auto range = fingers.equal_range(temp->first);
@@ -71,7 +73,7 @@ void* Location::run(void *arg)
             continue;
       
         //定位
-        debug("start to locate%s",rssi.c_str());
+        // debug("start to locate%s",rssi.c_str());
         pair<int,int> ret = thislo->Locating(rssi);
 
         //定位结果
@@ -215,54 +217,71 @@ pair<int,int> Location::Locating(const string& rssiInfo){
 
 void Location::getCurFinger(string mac1,string mac2,std::map<int,std::vector<string> > &curFinger,std::vector<Point> &points)
 {
-	int id = 1;	//标记点
 	for(auto temp = fingers.begin();temp != fingers.end();++temp)
 	{
-		// debug("temp's mac:%s",(temp->first).c_str());
-		if((temp->first == mac1) || (temp->first == mac2))
-		{
-			debug("mac1 or mac2 exist");
-			auto range = fingers.equal_range(temp->first);
+		auto range = fingers.equal_range(temp->first);
+		debug("%s size is %d",(temp->first).c_str(),(int)fingers.count(temp->first));
+		string st = (temp->first).substr(0,17);
 
-			for(auto item = range.first;item != range.second;++item)
+
+		// int cut=0;
+		// for(auto rangeitem = range.first;rangeitem != range.second;++rangeitem)
+		// {
+		// 	cut++;
+		// }
+		// debug("time:%d",cut);
+
+
+		if((mac1.compare(st) == 0)||(mac2.compare(st) == 0))
+		{
+			int cut=0;
+			for(auto rangeitem = range.first; rangeitem != range.second; ++rangeitem)
 			{
-				//从multimap取出对应的tuple
-				std::tuple<string,int,int> onefinger = item->second;
-				
-				for(auto item = points.begin(); ;++item)
+				cut++;
+				std::tuple<string,int,int> onefinger = rangeitem->second;
+				auto item = points.begin();
+				for(item; item != points.end();++item)
 				{
 					//如果坐标已经在points里，则把string加入到curfinder对应index的vector里
+					debug("itemx:%d,itemy:%d  fx:%d, fy%d",item->xposition,item->yposition,get<1>(onefinger),get<2>(onefinger));
 					if((item->xposition == get<1>(onefinger)) && item->yposition==get<2>(onefinger))
 					{
 						int index = item->nodeid;
 						curFinger[index].push_back(get<0>(onefinger));
-						break;
-					}
-
-					//如果不在points里，则往points中加入新的point，则把string加入到curfinder对应index的vector里
-					if(item == points.end())
-					{
-						int index = points.size();
-						Point pt(index,get<1>(onefinger),get<2>(onefinger));
-						points.push_back(pt);
-						std::vector<string> fing;
-						fing.push_back(get<0>(onefinger));
-						curFinger.insert(std::make_pair(index,fing));
+						debug("already in points");
 						break;
 					}
 				}
+				//如果不在points里，则往points中加入新的point，则把string加入到curfinder对应index的vector里
+				if(item == points.end())
+				{
+					int index = points.size();
+					Point pt(index,get<1>(onefinger),get<2>(onefinger));
+					points.push_back(pt);
+					std::vector<string> fing;
+					fing.push_back(get<0>(onefinger));
+					curFinger.insert(std::make_pair(index,fing));
+					debug("not in points");
+				}
 			}
-
-			temp = --(range.second);
+			debug("time:%d",cut);
 		}
+
+		temp = --(range.second);
 	}
+
 
 	//for test
-/*	for(auto temp = curFinger.begin();temp != curFinger.end();++temp)
+	for(auto temp = curFinger.begin();temp != curFinger.end();++temp)
 	{
-		debug("string:%s, x:%d, y%d",(get<0>(*temp)).c_str(),get<1>(*temp),get<2>(*temp));
+		auto item = *temp;
+		auto flist = item.second;
+		for(auto i=flist.begin();i!= flist.end();++i)
+		{
+			debug("string:%s",(*i).c_str());
+		}
 	}
-*/}
+}
 
 int Location::test(void)
 {
