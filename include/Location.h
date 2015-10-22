@@ -20,6 +20,8 @@ using std::pair;
  
 #include <Point.h>
 
+typedef pair<string, double> PAIR; 
+
 class Location
 {
 public:
@@ -55,6 +57,7 @@ public:
 	 */
 	pair<int,int> Locating(const string& rssiInfo);
 
+	int static cmp(const PAIR &x, const PAIR &y); 
 
 	/**
 	 * @brief 获取当前计算需要的指纹库

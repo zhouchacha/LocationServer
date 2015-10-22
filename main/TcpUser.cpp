@@ -161,7 +161,7 @@ void TcpUser::DataHandle(string &data)
             debug("DB receive location data");
             Json::Value rssi;
             rssi["rssi"] = value["rssi"];
-            // msgQueue.addLocItem(id,this,rssi);
+            msgQueue.addLocItem(id,this,rssi);
             break;
         }
 
