@@ -106,6 +106,8 @@ private:
 	 * 记录定位精度，第一个为X，第二个为y;
 	 */
 	std::vector<std::pair<int,int> > loc_record;
+	std::vector<int> points_size;
+	std::vector<int> matchcount;
 };
 
 #endif
